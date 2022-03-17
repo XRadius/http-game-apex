@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "http-game-apex",
+  "version": "1.0.0",
+  "devDependencies": {
+    "source-map-loader": "3.0.1",
+    "typescript": "4.6.2",
+    "webpack": "5.70.0",
+    "webpack-cli": "4.9.2",
+    "webpack-dev-server": "4.7.4"
+  },
+  "scripts": {
+    "prepare": "tsc && npm run webpack:build",
+    "webpack:build": "webpack build --config webpack.production.js",
+    "webpack:serve": "webpack serve --config webpack.development.js"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "name": "Client",
+    "outFiles": ["${workspaceFolder}/dist/**/*"],
+    "outputCapture": "std",
+    "preLaunchTask": "Webpack",
+    "request": "launch",
+    "type": "pwa-chrome",
+    "url": "http://localhost:3000/"
+  }]
+}

@@ -1,0 +1,34 @@
+html, body {
+  background-color: #000;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.box {
+  background-color: #FFF;
+  border-radius: 16px;
+  min-width: 256px;
+  padding: 16px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.box input {
+  margin-bottom: 8px;
+  padding: 4px;
+  width: calc(100% - 12px);
+}
+
+.canvas {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.title {
+  font-weight: bold;
+  text-align: center;
+}
