@@ -22,6 +22,12 @@ html, body {
   width: calc(100% - 12px);
 }
 
+.box select {
+  margin-bottom: 8px;
+  padding: 4px;
+  width: 100%;
+}
+
 .canvas {
   left: 0;
   position: absolute;

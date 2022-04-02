@@ -9,7 +9,7 @@ canvas.addEventListener('dblclick', () => {
     : document.body.requestFullscreen()).catch();
 });
 
-ui(async (main) => {
+ui(async (main, mode) => {
   const frameTime = 1000 / 30;
   const levelName = await main.levelNameAsync();
   while (true) {
@@ -18,12 +18,12 @@ ui(async (main) => {
     const localPlayer = players.find(x => x.isLocal);
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    renderFrame(levelName, localPlayer, players);
+    renderFrame(levelName, localPlayer, players, mode);
     await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
   }
 });
 
-function renderFrame(levelName: string, localPlayer: app.Player | undefined, players: Array<app.Player>) {
+function renderFrame(levelName: string, localPlayer: app.Player | undefined, players: Array<app.Player>, mode?: string) {
   switch (levelName) {
     case 'mp_rr_canyonlands_staging':
       radar.clear();
@@ -33,7 +33,7 @@ function renderFrame(levelName: string, localPlayer: app.Player | undefined, pla
     default:
       radar.clear();
       if (!localPlayer) break;
-      radar.renderAll(localPlayer, players);
+      radar.renderAll(localPlayer, players, mode);
       break;
   }
 }
