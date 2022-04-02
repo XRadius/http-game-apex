@@ -7,6 +7,6 @@ export const playerOffsets = {
   iTeamNum: BigInt('0x448'),        // CBaseEntity.m_iTeamNum
   iMaxHealth: BigInt('0x578'),      // CPlayer.m_iMaxHealth
   lifeState: BigInt('0x798'),       // CPlayer.m_lifeState
-  viewAngles: BigInt('0x2568'),     // ?
-  bleedoutState: BigInt('0x2708')   // CPlayer.m_bleedoutState
+  viewAngles: BigInt('0x2588'),     // ?
+  bleedoutState: BigInt('0x2728')   // CPlayer.m_bleedoutState
 };
