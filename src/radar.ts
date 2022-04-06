@@ -1,6 +1,7 @@
 import * as app from './lib';
 import {ui} from './ui';
 const canvas = <HTMLCanvasElement> document.querySelector('.canvas');
+const frameTime = 1000 / 30;
 const radar = new app.Radar(canvas);
 
 canvas.addEventListener('dblclick', () => {
@@ -9,19 +10,21 @@ canvas.addEventListener('dblclick', () => {
     : document.body.requestFullscreen()).catch();
 });
 
-ui(async (main, mode) => {
-  const frameTime = 1000 / 30;
-  const levelName = await main.levelNameAsync();
-  while (true) {
-    const beginTime = Date.now();
-    const players = await main.playersAsync();
-    const localPlayer = players.find(x => x.isLocal);
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    renderFrame(levelName, localPlayer, players, mode);
-    await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
-  }
+ui(async (controller, core, mode) => {
+  while (!controller.signal.aborted) await renderAsync(core, mode);
+  canvas.height = 0;
+  canvas.width = 0;
 });
+
+async function renderAsync(core: app.Core, mode?: string) {
+  const beginTime = Date.now();
+  const [levelName, players] = await Promise.all([core.levelNameAsync(), core.playersAsync()]);
+  const localPlayer = players.find(x => x.isLocal);
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  renderFrame(levelName, localPlayer, players, mode);
+  await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
+}
 
 function renderFrame(levelName: string, localPlayer: app.Player | undefined, players: Array<app.Player>, mode?: string) {
   switch (levelName) {

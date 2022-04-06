@@ -1,5 +1,5 @@
 import * as app from '..';
-import {mainOffsets} from './offsets/mainOffsets';
+import {coreOffsets} from './offsets/coreOffets';
 const maxPlayers = Array(60).fill(0).map((_, i) => i);
 
 export class Core {
@@ -18,15 +18,15 @@ export class Core {
   }
 
   async levelNameAsync() {
-    const levelNamePointer = new app.Pointer(this.region.start + mainOffsets.levelName, 32);
+    const levelNamePointer = new app.Pointer(this.region.start + coreOffsets.levelName, 32);
     const levelName = new app.CStringFactory(levelNamePointer);
     await this.process.resolveAsync(levelNamePointer);
     return levelName.build();
   }
 
   async playersAsync() {
-    const localPlayerPointer = new app.Pointer(this.region.start + mainOffsets.localPlayer, 1 << 5);
-    const playerPointers = maxPlayers.map(x => new app.Pointer(this.region.start + mainOffsets.clEntityList + BigInt(x << 5), 0x8));
+    const localPlayerPointer = new app.Pointer(this.region.start + coreOffsets.localPlayer, 1 << 5);
+    const playerPointers = maxPlayers.map(x => new app.Pointer(this.region.start + coreOffsets.clEntityList + BigInt(x << 5), 0x8));
     await this.process.resolveAsync(localPlayerPointer, playerPointers);
     const localPlayerAddress = localPlayerPointer.buffer.getBigUint64(0, true);
     const playerAddresses = playerPointers.map(x => x.buffer.getBigUint64(0, true)).filter(Boolean);
