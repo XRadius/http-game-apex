@@ -1,3 +1,4 @@
 /dist
 /node_modules
 /public/*.min.js
+/res/mp_*
