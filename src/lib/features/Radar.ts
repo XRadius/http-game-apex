@@ -30,7 +30,7 @@ export class Radar {
     }
   }
 
-  renderOne(localPlayer: app.Player, localOrigin: {x: number, y: number}, style: string | CanvasGradient | CanvasPattern) {
+  renderOne(localPlayer: app.Player, localOrigin: app.Vector, style: string | CanvasGradient | CanvasPattern) {
     const dx = (localPlayer.localOrigin.x - localOrigin.x) * 0.0254;
     const dy = (localPlayer.localOrigin.y - localOrigin.y) * 0.0254;
     const r = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));

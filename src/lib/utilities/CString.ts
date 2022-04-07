@@ -1,10 +1,7 @@
-export class CString {
-  constructor(
-    private readonly buffer: DataView) {}
-
-  toString() {
-    var result = '';
-    iterateBytes(this.buffer, x => result += x);
+export class CString extends String {
+  static from(buffer: DataView) {
+    var result = new CString();
+    iterateBytes(buffer, x => result += x);
     return result;
   }
 }

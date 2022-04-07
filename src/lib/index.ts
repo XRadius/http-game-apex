@@ -8,5 +8,4 @@ export * from './driver/Region';
 export * from './driver/Server';
 export * from './features/Radar';
 export * from './utilities/CString';
-export * from './utilities/CStringFactory';
 export * from './utilities/Vector';

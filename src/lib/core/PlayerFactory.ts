@@ -32,11 +32,11 @@ export class PlayerFactory {
     const health = this.health.buffer.getUint8(0);
     const healthMax = this.healthMax.buffer.getUint8(0);
     const lifeState = this.lifeState.buffer.getUint8(0);
-    const localOrigin = new app.Vector(this.localOrigin.buffer);
+    const localOrigin = app.Vector.from(this.localOrigin.buffer);
     const shieldHealth = this.shieldHealth.buffer.getUint8(0);
     const shieldHealthMax = this.shieldHealthMax.buffer.getUint8(0);
     const teamNum = this.teamNum.buffer.getUint8(0);
-    const viewAngles = new app.Vector(this.viewAngles.buffer);
+    const viewAngles = app.Vector.from(this.viewAngles.buffer);
     return new app.Player(this.isLocal, bleedoutState, health, healthMax, lifeState, localOrigin, shieldHealth, shieldHealthMax, teamNum, viewAngles);
   }
 }

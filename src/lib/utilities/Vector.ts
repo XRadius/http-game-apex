@@ -1,19 +1,16 @@
 export class Vector {
   constructor(
-    private readonly buffer: DataView) {}
+    readonly x: number,
+    readonly y: number,
+    readonly z: number) {}
 
-  get x() {
-    return this.buffer.getFloat32(0, true);
+  static from(buffer: DataView) {
+    const x = buffer.getFloat32(0, true);
+    const y = buffer.getFloat32(4, true);
+    const z = buffer.getFloat32(8, true);
+    return new Vector(x, y, z);
   }
-
-  get y() {
-    return this.buffer.getFloat32(4, true);
-  }
-
-  get z() {
-    return this.buffer.getFloat32(8, true);
-  }
-
+  
   toString() {
     return `(${this.x.toFixed()},${this.y.toFixed()},${this.z.toFixed()})`;
   }

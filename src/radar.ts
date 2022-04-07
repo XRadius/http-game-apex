@@ -26,12 +26,12 @@ async function renderAsync(core: app.Core, mode?: string) {
   await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
 }
 
-function renderFrame(levelName: string, localPlayer: app.Player | undefined, players: Array<app.Player>, mode?: string) {
+function renderFrame(levelName: app.CString, localPlayer: app.Player | undefined, players: Array<app.Player>, mode?: string) {
   switch (levelName) {
     case 'mp_rr_canyonlands_staging':
       radar.clear();
       if (!localPlayer) break;
-      radar.renderOne(localPlayer, {x: 31482.994140625, y: -6708.69677734375}, '#FFF');
+      radar.renderOne(localPlayer, new app.Vector(31482.994140625, -6708.69677734375, 0), '#FFF');
       break;
     default:
       radar.clear();

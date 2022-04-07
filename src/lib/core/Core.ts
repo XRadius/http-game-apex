@@ -19,9 +19,8 @@ export class Core {
 
   async levelNameAsync() {
     const levelNamePointer = new app.Pointer(this.region.start + coreOffsets.levelName, 32);
-    const levelName = new app.CStringFactory(levelNamePointer);
     await this.process.resolveAsync(levelNamePointer);
-    return levelName.build();
+    return app.CString.from(levelNamePointer.buffer);
   }
 
   async playersAsync() {
