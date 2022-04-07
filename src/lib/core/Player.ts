@@ -13,6 +13,15 @@ export class Player {
     readonly teamNum: number,
     readonly viewAngles: app.Vector) {}
 
+  isSameTeam(otherPlayer: app.Player, mode?: string) {
+    switch (mode) {
+      case 'control':
+        return this.teamNum % 2 === otherPlayer.teamNum % 2;
+      default:
+        return this.teamNum === otherPlayer.teamNum;
+    }
+  }
+
   toString() {
     return Object.entries(this)
       .sort(([a], [b]) => a.localeCompare(b))

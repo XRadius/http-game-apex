@@ -1,5 +1,6 @@
 module.exports = {
   entry: {
+    map: './dist/map',
     radar: './dist/radar'
   },
   output: {

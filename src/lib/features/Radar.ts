@@ -13,7 +13,7 @@ export class Radar {
     this.context = canvas.getContext('2d')!;
   }
 
-  clear() {
+  refresh() {
     this.update();
     this.renderBackground();
     this.renderLines();
@@ -23,7 +23,7 @@ export class Radar {
   renderAll(localPlayer: app.Player, players: Array<app.Player>, mode?: string) {
     for (const x of players) {
       if (!x.isLocal && !x.lifeState && x.localOrigin.x && x.localOrigin.y && x.localOrigin.z) {
-        this.renderOne(localPlayer, x.localOrigin, this.isSameTeam(localPlayer, x, mode)
+        this.renderOne(localPlayer, x.localOrigin, localPlayer.isSameTeam(x, mode)
           ? (x.bleedoutState ? '#FFFF00' : '#00FF00')
           : (x.bleedoutState ? '#FFA500' : '#FF0000'));
       }
@@ -44,12 +44,6 @@ export class Radar {
       this.context.fillStyle = style;
       this.context.fill();
     }
-  }
-
-  private isSameTeam(localPlayer: app.Player, player: app.Player, mode?: string) {
-    return mode === 'control'
-      ? localPlayer.teamNum % 2 === player.teamNum % 2
-      : localPlayer.teamNum === player.teamNum;
   }
 
   private renderBackground() {

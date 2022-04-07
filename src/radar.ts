@@ -29,12 +29,12 @@ async function renderAsync(core: app.Core, mode?: string) {
 function renderFrame(levelName: app.CString, localPlayer: app.Player | undefined, players: Array<app.Player>, mode?: string) {
   switch (levelName) {
     case 'mp_rr_canyonlands_staging':
-      radar.clear();
+      radar.refresh();
       if (!localPlayer) break;
       radar.renderOne(localPlayer, new app.Vector(31482.994140625, -6708.69677734375, 0), '#FFF');
       break;
     default:
-      radar.clear();
+      radar.refresh();
       if (!localPlayer) break;
       radar.renderAll(localPlayer, players, mode);
       break;

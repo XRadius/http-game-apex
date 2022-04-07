@@ -6,6 +6,7 @@ export * from './driver/Pointer';
 export * from './driver/Process';
 export * from './driver/Region';
 export * from './driver/Server';
+export * from './features/Map';
 export * from './features/Radar';
 export * from './utilities/CString';
 export * from './utilities/Vector';
