@@ -6,7 +6,7 @@ import {mp_rr_tropic_island} from './maps/mp_rr_tropic_island';
 export class Map {
   private readonly context: CanvasRenderingContext2D;
   private readonly image = new Image();
-  private data?: {xRatio: number, yRatio: number, xOrigin: number, yOrigin: number};
+  private data?: ReturnType<typeof getDataByLevelName>;
   private scaleR = 0;
   private scaleX = 0;
   private scaleY = 0;
@@ -46,7 +46,7 @@ export class Map {
 
   private fetch(levelName: app.CString) {
     this.data = getDataByLevelName(levelName);
-    this.image.src = this.data ? `maps/${levelName}.webp` : '';
+    this.image.src = this.data ? `images/maps/${levelName}.webp` : 'images/maps.webp';
   }
 
   private renderBackground() {
