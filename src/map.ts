@@ -10,20 +10,21 @@ canvas.addEventListener('dblclick', () => {
     : document.body.requestFullscreen()).catch();
 });
 
-ui(async (controller, core) => {
-  while (!controller.signal.aborted) await renderAsync(core);
+ui(x => renderAsync(x).finally(() => {
   canvas.height = 0;
   canvas.width = 0;
-});
+}));
 
 async function renderAsync(core: app.Core) {
-  const beginTime = Date.now();
-  const [levelName, players] = await Promise.all([core.levelNameAsync(), core.playersAsync()]);
-  const localPlayer = players.find(x => x.isLocal);
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
-  renderFrame(levelName, localPlayer, players);
-  await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
+  while (true) {
+    const beginTime = Date.now();
+    const [levelName, players] = await Promise.all([core.levelNameAsync(), core.playersAsync()]);
+    const localPlayer = players.find(x => x.isLocal);
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    renderFrame(levelName, localPlayer, players);
+    await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
+  }
 }
 
 function renderFrame(levelName: app.CString, localPlayer: app.Player | undefined, players: Array<app.Player>) {

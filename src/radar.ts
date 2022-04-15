@@ -10,23 +10,24 @@ canvas.addEventListener('dblclick', () => {
     : document.body.requestFullscreen()).catch();
 });
 
-ui(async (controller, core, mode) => {
-  while (!controller.signal.aborted) await renderAsync(core, mode);
+ui(x => renderAsync(x).finally(() => {
   canvas.height = 0;
   canvas.width = 0;
-});
+}));
 
-async function renderAsync(core: app.Core, mode?: string) {
-  const beginTime = Date.now();
-  const [levelName, players] = await Promise.all([core.levelNameAsync(), core.playersAsync()]);
-  const localPlayer = players.find(x => x.isLocal);
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
-  renderFrame(levelName, localPlayer, players, mode);
-  await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
+async function renderAsync(core: app.Core) {
+  while (true) {
+    const beginTime = Date.now();
+    const [levelName, players] = await Promise.all([core.levelNameAsync(), core.playersAsync()]);
+    const localPlayer = players.find(x => x.isLocal);
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    renderFrame(levelName, localPlayer, players);
+    await new Promise(x => setTimeout(x, frameTime - (Date.now() - beginTime)));
+  }
 }
 
-function renderFrame(levelName: app.CString, localPlayer: app.Player | undefined, players: Array<app.Player>, mode?: string) {
+function renderFrame(levelName: app.CString, localPlayer: app.Player | undefined, players: Array<app.Player>) {
   switch (levelName) {
     case 'mp_rr_canyonlands_staging':
       radar.refresh();
@@ -36,7 +37,7 @@ function renderFrame(levelName: app.CString, localPlayer: app.Player | undefined
     default:
       radar.refresh();
       if (!localPlayer) break;
-      radar.renderAll(localPlayer, players, mode);
+      radar.renderAll(localPlayer, players);
       break;
   }
 }

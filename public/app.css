@@ -1,40 +1,43 @@
 html, body {
-  background-color: #000;
-  height: 100%;
+  background: #222;
   margin: 0;
-  width: 100%;
+  padding: 0;
 }
 
-.box {
-  background-color: #FFF;
-  border-radius: 16px;
-  min-width: 256px;
-  padding: 16px;
+.container {
+  max-width: 320px;
+  width: calc(100% - 16px);
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
 
-.box input {
-  margin-bottom: 8px;
-  padding: 4px;
-  width: calc(100% - 12px);
+.content {
+  background: #FFF;
+  border-radius: 8px;
+  padding: 8px;
 }
 
-.box select {
-  margin-bottom: 8px;
-  padding: 4px;
-  width: 100%;
-}
-
-.canvas {
-  left: 0;
-  position: absolute;
-  top: 0;
-}
-
-.title {
-  font-weight: bold;
+.message {
+  overflow: hidden;
+  white-space: nowrap;
   text-align: center;
+  text-overflow: ellipsis;
+}
+
+a {
+  color: #00F;
+  text-decoration: none;
+}
+
+h1 {
+  color: #FFF;
+  margin: 0 0 4px 0;
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
 }
