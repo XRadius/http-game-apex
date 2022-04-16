@@ -1,5 +1,5 @@
 import * as app from '..';
-import {coreOffsets} from './offsets/coreOffets';
+import {coreOffsets} from './offsets/coreOffsets';
 const maxPlayers = Array(60).fill(0).map((_, i) => i);
 
 export class Core {
