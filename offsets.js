@@ -60,6 +60,6 @@ function find(html, name) {
 async function writeAsync(name, values) {
   const entries = Object.entries(values).map(([k, v]) => `${k}: BigInt('0x${v.toString(16)}')`);
   const filePath = path.join('src/lib/core/offsets', `${name}.ts`);
-  const result = `export const ${name} = {\n${entries.map(x => `  ${x}`).join(',\n')}\n};`;
+  const result = `export const ${name} = {\n${entries.map(x => `  ${x}`).join(',\n')}\n};\n`;
   await fs.promises.writeFile(filePath, result);
 }
