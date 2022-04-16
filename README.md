@@ -1,6 +1,6 @@
 # http-game-apex
 
-Linux *Apex Legends* tools powered by [http-driver](https://github.com/XRadius/http-driver). **These tools won't work without `http-driver`**.
+Linux *Apex Legends* connector powered by [http-driver](https://github.com/XRadius/http-driver). **This connector won't work without `http-driver`**.
 
 # Quick Start
 
@@ -48,9 +48,19 @@ npm install
 6. Load as a *connector* in your `http-driver`:
 
 * Use the *Google Chrome* window to navigate to your `http-driver`.
-* Load *http://network-ip:3000/* as the *connector*. Replace `network-ip` for your *network IP*.
+* Load *http://0.0.0.0:3000/* as the *connector*. Replace `0.0.0.0` for your *network-resolvable* IP.
 
-Finally, you can use `npm run webpack:build` to build your own *precompiled production version*.
+# Troubleshooting
+
+These are the most common problems when using `http-game-apex`.
+
+## "Load this connector in your http-driver."
+
+You've loaded this *connector* in your browser without using `http-driver`. Because of [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content#warnings_in_firefox_web_console) and [private network CORS](https://web.dev/cors-rfc1918-feedback/) policies, your browser will prevent the *connector* from reaching your `http-driver`. To prevent this, `http-driver` loads *connectors* through a [reverse proxy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Proxy_servers_and_tunneling) mechanism to map the *connector* into its private network space. To solve this issue, navigate to your `http-driver` and enter the *connector* URL there.
+
+## "Your http-driver is outdated."
+
+As it says on the box, your `http-driver` is outdated! Follow the [update instructions](https://github.com/XRadius/http-driver#updating) and try again.
 
 # Contributions
 
