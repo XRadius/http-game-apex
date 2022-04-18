@@ -1,31 +1,37 @@
 import * as app from '..';
+import {playerOffsets} from './offsets/playerOffsets';
 
-export class Player {
-  constructor(
+export class Player extends app.Entity {
+  constructor(address: bigint,
     readonly isLocal: boolean,
-    readonly bleedoutState: number,
-    readonly health: number,
-    readonly healthMax: number,
-    readonly lifeState: number,
-    readonly localOrigin: app.Vector,
-    readonly shieldHealth: number,
-    readonly shieldHealthMax: number,
-    readonly teamNum: number,
-    readonly viewAngles: app.Vector) {}
+    readonly lifeState = new app.UInt8Pointer(address + playerOffsets.lifeState),
+    readonly viewAngles = new app.VectorPointer(address + playerOffsets.viewAngles),
+    readonly bleedoutState = new app.UInt8Pointer(address + playerOffsets.bleedoutState)) {
+    super(address);
+  }
+  
+  get isValid() {
+    return this.name.value
+      && !this.lifeState.value
+      && !app.shallowEquals(this.localOrigin.value, new app.Vector(0, 0, 0));
+  }
+  
+  createColor(otherPlayer: app.Player, mode?: string) {
+    return this.isLocal ? '#0000FF' : this.isSameTeam(otherPlayer, mode)
+      ? (this.bleedoutState.value ? '#FFFF00' : '#00FF00')
+      : (this.bleedoutState.value ? '#FFA500' : '#FF0000');
+  }
 
   isSameTeam(otherPlayer: app.Player, mode?: string) {
     switch (mode) {
       case 'control':
-        return this.teamNum % 2 === otherPlayer.teamNum % 2;
+        return this.teamNum.value % 2 === otherPlayer.teamNum.value % 2;
       default:
-        return this.teamNum === otherPlayer.teamNum;
+        return this.teamNum.value === otherPlayer.teamNum.value;
     }
   }
 
   toString() {
-    return Object.entries(this)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([k, v]) => `${k}=${v}`)
-      .join(',')
+    return app.serialize(this);
   }
 }

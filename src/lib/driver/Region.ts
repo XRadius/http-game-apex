@@ -1,23 +1,15 @@
 import {Map} from './types/Map';
 
 export class Region {
-  private constructor(
-    readonly start: bigint,
-    readonly end: bigint,
-    readonly perms: number,
-    readonly offset: bigint,
-    readonly devMajor: number,
-    readonly devMinor: number,
-    readonly inode: bigint,
-    readonly pathname: string) {}
-
-  static create(value: Map) {
-    const start = parseHex(value.start);
-    const end = parseHex(value.end);
-    const offset = parseHex(value.offset);
-    const inode = parseHex(value.inode);
-    return new Region(start, end, value.perms, offset, value.devMajor, value.devMinor, inode, value.pathname);
-  }
+  constructor(value: Map,
+    readonly start = parseHex(value.start),
+    readonly end = parseHex(value.end),
+    readonly perms = value.perms,
+    readonly offset = parseHex(value.offset),
+    readonly devMajor = value.devMajor,
+    readonly devMinor = value.devMinor,
+    readonly inode = parseHex(value.inode),
+    readonly pathname = value.pathname) {}
 }
 
 function parseHex(value: string) {

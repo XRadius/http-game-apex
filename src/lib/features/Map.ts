@@ -26,11 +26,7 @@ export class Map {
 
   renderAll(localPlayer: app.Player, players: Array<app.Player>, mode?: string) {
     for (const x of players) {
-      if (!x.lifeState && x.localOrigin.x && x.localOrigin.y && x.localOrigin.z) {
-        this.renderOne(x.localOrigin, x.isLocal ? '#0000FF' : localPlayer.isSameTeam(x, mode)
-          ? (x.bleedoutState ? '#FFFF00' : '#00FF00')
-          : (x.bleedoutState ? '#FFA500' : '#FF0000'));
-      }
+      this.renderOne(x.localOrigin.value, x.createColor(localPlayer, mode));
     }
   }
 

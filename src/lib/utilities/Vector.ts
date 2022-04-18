@@ -1,3 +1,5 @@
+import * as app from '..';
+
 export class Vector {
   constructor(
     readonly x: number,
@@ -10,8 +12,16 @@ export class Vector {
     const z = buffer.getFloat32(8, true);
     return new Vector(x, y, z);
   }
+
+  toBuffer() {
+    const buffer = new DataView(new ArrayBuffer(0xC));
+    buffer.setFloat32(0, this.x, true);
+    buffer.setFloat32(4, this.y, true);
+    buffer.setFloat32(8, this.z, true);
+    return buffer;
+  }
   
   toString() {
-    return `(${this.x.toFixed()},${this.y.toFixed()},${this.z.toFixed()})`;
+    return app.serialize(this);
   }
 }

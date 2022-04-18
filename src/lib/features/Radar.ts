@@ -22,21 +22,18 @@ export class Radar {
 
   renderAll(localPlayer: app.Player, players: Array<app.Player>, mode?: string) {
     for (const x of players) {
-      if (!x.isLocal && !x.lifeState && x.localOrigin.x && x.localOrigin.y && x.localOrigin.z) {
-        this.renderOne(localPlayer, x.localOrigin, localPlayer.isSameTeam(x, mode)
-          ? (x.bleedoutState ? '#FFFF00' : '#00FF00')
-          : (x.bleedoutState ? '#FFA500' : '#FF0000'));
-      }
+      if (x.isLocal) continue;
+      this.renderOne(localPlayer, x.localOrigin.value, x.createColor(localPlayer, mode));
     }
   }
 
   renderOne(localPlayer: app.Player, localOrigin: app.Vector, style: string | CanvasGradient | CanvasPattern) {
-    const dx = (localPlayer.localOrigin.x - localOrigin.x) * 0.0254;
-    const dy = (localPlayer.localOrigin.y - localOrigin.y) * 0.0254;
+    const dx = (localPlayer.localOrigin.value.x - localOrigin.x) * 0.0254;
+    const dy = (localPlayer.localOrigin.value.y - localOrigin.y) * 0.0254;
     const r = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     if (r < this.maximumDistance) {
       const s = this.outerRadius / this.maximumDistance;
-      const a = Math.sign(dy) * Math.acos(dx / r) - localPlayer.viewAngles.y * Math.PI / 180;
+      const a = Math.sign(dy) * Math.acos(dx / r) - localPlayer.viewAngles.value.y * Math.PI / 180;
       const x = this.centerX + Math.sin(a) * r * s;
       const y = this.centerY + Math.cos(a) * r * s;
       this.context.beginPath();
@@ -56,7 +53,7 @@ export class Radar {
 
   private renderLines() {
     this.context.strokeStyle = '#FFF';
-    for (var i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
       const x = this.centerX + this.outerRadius * Math.cos(i * Math.PI * 0.25);
       const y = this.centerY + this.outerRadius * Math.sin(i * Math.PI * 0.25);
       this.context.beginPath();
@@ -68,7 +65,7 @@ export class Radar {
 
   private renderRings() {
     this.context.strokeStyle = '#FFF';
-    for (var i = 1; i <= this.numberOfRings; i++) {
+    for (let i = 1; i <= this.numberOfRings; i++) {
       this.context.beginPath();
       this.context.arc(this.centerX, this.centerY, this.outerRadius * i / this.numberOfRings, 0, Math.PI * 2);
       this.context.stroke();

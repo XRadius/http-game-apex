@@ -13,13 +13,17 @@ const path = require('path');
     localPlayer: find(offsets, 'local_player')
   });
   
-  writeAsync('playerOffsets', {
-    localOrigin: BigInt('0x158'),
-    shieldHealth: find(cBaseEntity, 'm_shieldHealth'),
-    shieldHealthMax: find(cBaseEntity, 'm_shieldHealthMax'),
-    iHealth: find(cPlayer, 'm_iHealth'),
+  writeAsync('entityOffsets', {
+    localOrigin: find(cBaseEntity, 'm_localOrigin') + BigInt(0x100),
     iTeamNum: find(cBaseEntity, 'm_iTeamNum'),
-    iMaxHealth: find(cPlayer, 'm_iMaxHealth'),
+    iName: find(cBaseEntity, 'm_iName'),
+    glowColor: find(offsets, 'glow_color'),
+    glowType: find(offsets, 'glow_type') + BigInt(0x4),
+    glowEnable: find(offsets, 'glow_enable'),
+    glowThroughWall: find(offsets, 'glow_enable') + BigInt(0x8)
+  });
+
+  writeAsync('playerOffsets', {
     lifeState: find(cPlayer, 'm_lifeState'),
     viewAngles: find(cPlayer, 'm_ammoPoolCapacity') - BigInt(0x14),
     bleedoutState: find(cPlayer, 'm_bleedoutState')

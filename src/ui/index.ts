@@ -11,7 +11,7 @@ export async function ui(mainAsync: (core: app.Core) => Promise<void>) {
       case 0:
         content.innerHTML = language.errorDriver;
         break;
-      case 2:
+      case 3:
         content.innerHTML = await tryAsync(mainAsync) ? language.error : language.errorProcess;
         break;
       default:

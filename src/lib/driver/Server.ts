@@ -5,7 +5,7 @@ export class Server {
   async processesAsync() {
     const response = await fetch('/api/proc');
     const result = await response.json() as Array<Proc>;
-    return result.map(x => app.Process.create(x));
+    return result.map(x => new app.Process(x));
   }
 
   async versionAsync() {

@@ -4,8 +4,8 @@ const maxPlayers = Array(60).fill(0).map((_, i) => i);
 
 export class Core {
   private constructor(
-    private readonly process: app.Process,
-    private readonly region: app.Region) {}
+    readonly process: app.Process,
+    readonly region: app.Region) {}
 
   static async createAsync(server: app.Server) {
     const processes = await server.processesAsync();
@@ -18,23 +18,23 @@ export class Core {
   }
 
   async levelNameAsync() {
-    const levelNamePointer = new app.Pointer(this.region.start + coreOffsets.levelName, 32);
-    await this.process.resolveAsync(levelNamePointer);
-    return app.CString.from(levelNamePointer.buffer);
+    const levelNamePointer = new app.CStringPointer(this.region.start + coreOffsets.levelName, 32);
+    await this.process.batch(levelNamePointer).readAsync();
+    return levelNamePointer.value;
   }
 
   async playersAsync() {
-    const localPlayerPointer = new app.Pointer(this.region.start + coreOffsets.localPlayer, 1 << 5);
-    const playerPointers = maxPlayers.map(x => new app.Pointer(this.region.start + coreOffsets.clEntityList + BigInt(x << 5), 0x8));
-    await this.process.resolveAsync(localPlayerPointer, playerPointers);
-    const localPlayerAddress = localPlayerPointer.buffer.getBigUint64(0, true);
-    const playerAddresses = playerPointers.map(x => x.buffer.getBigUint64(0, true)).filter(Boolean);
-    const players = playerAddresses.map(x => app.PlayerFactory.create(x, localPlayerAddress === x));
-    await this.process.resolveAsync(pointersOf(players));
-    return players.map(x => x.build());
+    const localPlayerPointer = new app.UInt64Pointer(this.region.start + coreOffsets.localPlayer);
+    const playerPointers = maxPlayers.map(x => new app.UInt64Pointer(this.region.start + coreOffsets.clEntityList + BigInt(x << 5)));
+    await this.process.batch(localPlayerPointer, playerPointers).readAsync();
+    const localPlayerAddress = localPlayerPointer.value;
+    const playerAddresses = playerPointers.map(x => x.value).filter(Boolean);
+    const players = playerAddresses.map(x => new app.Player(x, localPlayerAddress === x));
+    await this.process.batch(pointersOf(players)).readAsync();
+    return players.filter(x => x.isValid);
   }
 }
 
-function pointersOf(players: Array<app.PlayerFactory>): Array<app.Pointer> {
+function pointersOf(players: Array<app.Player>): Array<app.Pointer> {
   return players.flatMap(x => Object.values(x).filter(y => y instanceof app.Pointer));
 }
