@@ -7,7 +7,7 @@ Linux *Apex Legends* connector powered by [http-driver](https://github.com/XRadi
 The easiest way to use `http-game-apex` is to navigate to your `http-driver` and load this connector:
 
 ```
-https://xradius-apex.herokuapp.com/
+https://http-game-apex.netlify.app/
 ```
 
 This is the *precompiled production connector*, which [updates automatically](https://github.com/XRadius/http-game-apex/deployments/) for this repository.
