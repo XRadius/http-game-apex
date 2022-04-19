@@ -3,8 +3,8 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "files.exclude": {
       "dist": true,
-      "node_modules": true,
-      "public/*.min.js": true
+      "docs/*.min.js": true,
+      "node_modules": true
     }
   }
   

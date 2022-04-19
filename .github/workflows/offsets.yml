@@ -11,6 +11,7 @@ jobs:
         with:
           node-version: '16'
       - run: |
+          npm ci
           node offsets
           git config user.name 'OffsetsBot'
           git config user.email '<>'

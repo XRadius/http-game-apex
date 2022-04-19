@@ -7,10 +7,10 @@ Linux *Apex Legends* connector powered by [http-driver](https://github.com/XRadi
 The easiest way to use `http-game-apex` is to navigate to your `http-driver` and load this connector:
 
 ```
-https://http-game-apex.netlify.app/
+https://xradius.github.io/http-game-apex/
 ```
 
-This is the *precompiled production connector*, which [updates automatically](https://github.com/XRadius/http-game-apex/deployments/) for this repository.
+This is the *precompiled production connector*, which [updates automatically](https://github.com/XRadius/http-game-apex/deployments/).
 
 # Installation
 
@@ -25,7 +25,7 @@ We'll setup a development environment to compile and run from source.
 2. Clone this repository:
 
 ```
-git clone https://github.com/XRadius/http-game-apex
+git clone https://github.com/XRadius/http-game-apex/
 ```
 
 3. Open the `http-game-apex` directory:
@@ -61,14 +61,3 @@ You've loaded this *connector* in your browser without using `http-driver`. Beca
 ## "Your http-driver is outdated."
 
 As it says on the box, your `http-driver` is outdated! Follow the [update instructions](https://github.com/XRadius/http-driver#updating) and try again.
-
-# Contributions
-
-So, you want to contribute? Please do!
-
-* [Bugfixes]: Pull requests are always welcome.
-* [New Offsets]: Pull requests are always welcome.
-* [New Features]: Discuss before a pull request.
-* [New Tools]: Discuss before a pull request.
-
-Anything else should be discussed first.
