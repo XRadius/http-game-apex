@@ -53,7 +53,8 @@ async function fetchAsync(url) {
 function find(html, name) {
   const expression = new RegExp(`${name}.*(0x[0-9A-Z]+)`, 'i');
   const match = html.match(expression);
-  return match ? BigInt(match[1]) : undefined;
+  if (match) return BigInt(match[1]);
+  throw new Error(`Invalid offset ${name} in ${html}`);
 }
 
 /**
