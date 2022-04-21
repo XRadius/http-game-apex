@@ -2,7 +2,7 @@ import * as app from './lib';
 import {ui} from './ui';
 const canvas = <HTMLCanvasElement> document.querySelector('.canvas');
 const frameTime = 1000 / 30;
-const radar = new app.Radar(canvas);
+const radar = new app.Radar3(canvas);
 
 canvas.addEventListener('dblclick', () => {
   (document.fullscreenElement
