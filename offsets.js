@@ -17,8 +17,6 @@ const path = require('path');
     localOrigin: find(cBaseEntity, 'm_localOrigin') + BigInt(0x100),
     iTeamNum: find(cBaseEntity, 'm_iTeamNum'),
     iName: find(cBaseEntity, 'm_iName'),
-    glowColor: find(offsets, 'glow_color'),
-    glowType: find(offsets, 'glow_type') + BigInt(0x4),
     glowEnable: find(offsets, 'glow_enable'),
     glowThroughWall: find(offsets, 'glow_enable') + BigInt(0x8)
   });
