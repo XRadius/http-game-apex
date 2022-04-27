@@ -17,6 +17,8 @@ const path = require('path');
     localOrigin: find(cBaseEntity, 'm_localOrigin') + BigInt(0x100),
     iTeamNum: find(cBaseEntity, 'm_iTeamNum'),
     iName: find(cBaseEntity, 'm_iName'),
+    shieldHealth: find(cPlayer, 'm_shieldHealth'),
+    shieldHealthMax: find(cPlayer, 'm_shieldHealthMax'),
     glowEnable: find(offsets, 'glow_enable'),
     glowThroughWall: find(offsets, 'glow_enable') + BigInt(0x8)
   });
@@ -24,6 +26,8 @@ const path = require('path');
   writeAsync('playerOffsets', {
     lifeState: find(cPlayer, 'm_lifeState'),
     viewAngles: find(cPlayer, 'm_ammoPoolCapacity') - BigInt(0x14),
+    iHealth: find(cPlayer, 'm_iHealth'),
+    iMaxHealth: find(cPlayer, 'm_iMaxHealth'),
     bleedoutState: find(cPlayer, 'm_bleedoutState')
   });
 })();
