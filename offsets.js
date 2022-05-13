@@ -17,8 +17,8 @@ const path = require('path');
     localOrigin: find(cBaseEntity, 'm_localOrigin') + BigInt(0x100),
     iTeamNum: find(cBaseEntity, 'm_iTeamNum'),
     iName: find(cBaseEntity, 'm_iName'),
-    glowEnable: find(offsets, 'glow_enable'),
-    glowThroughWall: find(offsets, 'glow_enable') + BigInt(0x8)
+    glowEnable: BigInt(0x3c8),
+    glowThroughWall: BigInt(0x3d0)
   });
 
   writeAsync('playerOffsets', {
