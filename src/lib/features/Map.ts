@@ -1,7 +1,8 @@
 import * as app from '..';
 import {mp_rr_canyonlands_mu3} from './maps/mp_rr_canyonlands_mu3';
+import {mp_rr_desertlands_mu3} from './maps/mp_rr_desertlands_mu3';
 import {mp_rr_olympus_mu2} from './maps/mp_rr_olympus_mu2';
-import {mp_rr_tropic_island} from './maps/mp_rr_tropic_island';
+import {mp_rr_tropic_island_mu1} from './maps/mp_rr_tropic_island_mu1';
 
 export class Map {
   private readonly context: CanvasRenderingContext2D;
@@ -32,8 +33,8 @@ export class Map {
 
   renderOne(localOrigin: app.Vector, style: string | CanvasGradient | CanvasPattern) {
     if (!this.data) return;
-    const x = this.shiftX + (1 / this.image.width * this.scaleX) * (localOrigin.x - this.data.xOrigin) / this.data.xRatio;
-    const y = this.shiftY + (1 / this.image.width * this.scaleY) * (localOrigin.y - this.data.yOrigin) / this.data.yRatio;
+    const x = this.shiftX + (1 / this.image.width * this.scaleX) * (localOrigin.x - this.data.posX) / this.data.scale;
+    const y = this.shiftY + (1 / this.image.height * this.scaleY) * (localOrigin.y - this.data.posY) / -this.data.scale;
     this.context.beginPath();
     this.context.arc(x, y, this.scaleR * 8, 0, Math.PI * 2);
     this.context.fillStyle = style;
@@ -63,10 +64,12 @@ function getDataByLevelName(levelName: app.CString) {
   switch (levelName) {
     case 'mp_rr_canyonlands_mu3':
       return mp_rr_canyonlands_mu3;
+    case 'mp_rr_desertlands_mu3':
+      return mp_rr_desertlands_mu3;
     case 'mp_rr_olympus_mu2':
       return mp_rr_olympus_mu2;
-    case 'mp_rr_tropic_island':
-      return mp_rr_tropic_island;
+    case 'mp_rr_tropic_island_mu1':
+      return mp_rr_tropic_island_mu1;
     default:
       return;
   }
