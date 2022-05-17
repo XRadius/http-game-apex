@@ -1,13 +1,9 @@
 import * as app from '..';
-import {mp_rr_canyonlands_mu3} from './maps/mp_rr_canyonlands_mu3';
-import {mp_rr_desertlands_mu3} from './maps/mp_rr_desertlands_mu3';
-import {mp_rr_olympus_mu2} from './maps/mp_rr_olympus_mu2';
-import {mp_rr_tropic_island_mu1} from './maps/mp_rr_tropic_island_mu1';
 
 export class Map {
   private readonly context: CanvasRenderingContext2D;
   private readonly image = new Image();
-  private data?: ReturnType<typeof getDataByLevelName>;
+  private map?: ReturnType<typeof getDataByLevelName>;
   private ratioX = 0;
   private ratioY = 0;
   private scaleR = 0;
@@ -34,9 +30,9 @@ export class Map {
   }
 
   renderOne(localOrigin: app.Vector, style: string | CanvasGradient | CanvasPattern) {
-    if (!this.data) return;
-    const x = this.shiftX + (1 / this.image.width * this.scaleX) * (localOrigin.x - this.data.posX) / this.ratioX;
-    const y = this.shiftY + (1 / this.image.height * this.scaleY) * (localOrigin.y - this.data.posY) / -this.ratioY;
+    if (!this.map) return;
+    const x = this.shiftX + (1 / this.image.width * this.scaleX) * (localOrigin.x - this.map.x) / this.ratioX;
+    const y = this.shiftY + (1 / this.image.height * this.scaleY) * (localOrigin.y - this.map.y) / -this.ratioY;
     this.context.beginPath();
     this.context.arc(x, y, this.scaleR * 8, 0, Math.PI * 2);
     this.context.fillStyle = style;
@@ -44,8 +40,8 @@ export class Map {
   }
 
   private fetch(levelName: app.CString) {
-    this.data = getDataByLevelName(levelName);
-    this.image.src = this.data ? `images/maps/${levelName}.webp` : 'images/maps.webp';
+    this.map = getDataByLevelName(levelName);
+    this.image.src = this.map ? `images/maps/${levelName}.webp` : 'images/maps.webp';
   }
 
   private renderBackground() {
@@ -54,9 +50,9 @@ export class Map {
   }
 
   private update() {
-    if (!this.data) return;
-    this.ratioX = (this.data.posY - this.data.posX) / this.image.width;
-    this.ratioY = (this.data.posY - this.data.posX) / this.image.height;
+    if (!this.map) return;
+    this.ratioX = (this.map.y - this.map.x) / this.image.width;
+    this.ratioY = (this.map.y - this.map.x) / this.image.height;
     this.scaleR = Math.min(this.canvas.width / this.image.width, this.canvas.height / this.image.height);
     this.scaleX = this.image.width * this.scaleR;
     this.scaleY = this.image.height * this.scaleR;
@@ -68,13 +64,13 @@ export class Map {
 function getDataByLevelName(levelName: app.CString) {
   switch (levelName) {
     case 'mp_rr_canyonlands_mu3':
-      return mp_rr_canyonlands_mu3;
+      return {x: -37541, y: 43886};
     case 'mp_rr_desertlands_mu3':
-      return mp_rr_desertlands_mu3;
+      return {x: -45056, y: 45055};
     case 'mp_rr_olympus_mu2':
-      return mp_rr_olympus_mu2;
+      return {x: -52024, y: 48025};
     case 'mp_rr_tropic_island_mu1':
-      return mp_rr_tropic_island_mu1;
+      return {x: -50606, y: 52139};
     default:
       return;
   }
