@@ -12,7 +12,9 @@ export class Core {
     const targetProcess = processes.find(x => x.command.toLowerCase().endsWith('r5apex.exe'));
     if (!targetProcess) throw new Error('Invalid process!');
     const regions = await targetProcess.regionsAsync();
-    const targetRegion = regions.find(x => x.pathname.toLowerCase().endsWith('r5apex.exe'));
+    const targetRegion = regions.find(x => x.pathname.toLowerCase().endsWith('r5apex.exe'))
+      ?? regions.find(x => x.perms == 0x1 && x.pathname.startsWith('/memfd'))
+      ?? regions.find(x => x.start === BigInt(0x140000000));
     if (!targetRegion) throw new Error('Invalid region!');
     return new Core(targetProcess, targetRegion);
   }
