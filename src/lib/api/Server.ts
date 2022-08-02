@@ -1,10 +1,9 @@
-import * as app from '..';
-import {Proc} from './types/Proc';
+import * as app from '.';
 
 export class Server {
   async processesAsync() {
     const response = await fetch('/api/proc');
-    const result = await response.json() as Array<Proc>;
+    const result = await response.json() as Array<app.IProcess>;
     return result.map(x => new app.Process(x));
   }
 

@@ -1,4 +1,4 @@
-import * as app from '..';
+import * as app from '.';
 
 export class Map {
   private readonly context: CanvasRenderingContext2D;
@@ -17,19 +17,19 @@ export class Map {
     this.context = canvas.getContext('2d')!;
   }
 
-  refresh(levelName: app.CString) {
+  refresh(levelName: string) {
     this.fetch(levelName);
     this.update();
     this.renderBackground();
   }
 
-  renderAll(localPlayer: app.Player, players: Array<app.Player>, mode?: string) {
+  renderAll(localPlayer: app.core.Player, players: Array<app.core.Player>) {
     for (const x of players) {
-      this.renderOne(x.localOrigin.value, x.createColor(localPlayer, mode));
+      this.renderOne(x.localOrigin.value, x.createColor(localPlayer));
     }
   }
 
-  renderOne(localOrigin: app.Vector, style: string | CanvasGradient | CanvasPattern) {
+  renderOne(localOrigin: app.core.IVector, style: string | CanvasGradient | CanvasPattern) {
     if (!this.map) return;
     const x = this.shiftX + (1 / this.image.width * this.scaleX) * (localOrigin.x - this.map.x) / this.ratioX;
     const y = this.shiftY + (1 / this.image.height * this.scaleY) * (localOrigin.y - this.map.y) / -this.ratioY;
@@ -39,7 +39,7 @@ export class Map {
     this.context.fill();
   }
 
-  private fetch(levelName: app.CString) {
+  private fetch(levelName: string) {
     this.map = getDataByLevelName(levelName);
     this.image.src = this.map ? `images/maps/${levelName}.webp` : 'images/maps.webp';
   }
@@ -61,7 +61,7 @@ export class Map {
   }
 }
 
-function getDataByLevelName(levelName: app.CString) {
+function getDataByLevelName(levelName: string) {
   switch (levelName) {
     case 'mp_rr_canyonlands_mu3':
       return {x: -37541, y: 43886};

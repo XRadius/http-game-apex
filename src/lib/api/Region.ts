@@ -1,7 +1,7 @@
-import {Map} from './types/Map';
+import * as app from '.';
 
 export class Region {
-  constructor(value: Map,
+  constructor(value: app.IRegion,
     readonly start = parseHex(value.start),
     readonly end = parseHex(value.end),
     readonly perms = value.perms,
@@ -17,3 +17,14 @@ function parseHex(value: string) {
     ? BigInt(value)
     : BigInt(`0x${value}`);
 }
+
+export type IRegion = {
+  devMajor: number,
+  devMinor: number,
+  end: string,
+  inode: string,
+  offset: string,
+  pathname: string,
+  perms: number,
+  start: string
+};

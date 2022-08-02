@@ -1,13 +1,20 @@
-import * as app from '..';
+import * as app from '.';
 import {coreOffsets} from './offsets/coreOffsets';
-const maxPlayers = Array(60).fill(0).map((_, i) => i);
 
 export class Core {
-  private constructor(
-    readonly process: app.Process,
-    readonly region: app.Region) {}
+  readonly entityList = new app.EntityList(this.address + coreOffsets.clEntityList, this.channel);
+  readonly levelName = new app.LevelName(this.address + coreOffsets.levelName);
+  readonly localPlayer = new app.LocalPlayer(this.address + coreOffsets.localPlayer);
 
-  static async createAsync(server: app.Server) {
+  private constructor(
+    private readonly address: bigint,
+    private readonly channel: app.api.Channel) {
+    this.channel.create(this.entityList);
+    this.channel.create(this.levelName);
+    this.channel.create(this.localPlayer);
+  }
+
+  static async createAsync(server: app.api.Server) {
     const processes = await server.processesAsync();
     const targetProcess = processes.find(x => x.command.toLowerCase().endsWith('r5apex.exe'));
     if (!targetProcess) throw new Error('Invalid process!');
@@ -16,27 +23,10 @@ export class Core {
       ?? regions.find(x => x.perms == 0x1 && x.pathname.startsWith('/memfd'))
       ?? regions.find(x => x.start === BigInt(0x140000000));
     if (!targetRegion) throw new Error('Invalid region!');
-    return new Core(targetProcess, targetRegion);
+    return new Core(targetRegion.start, new app.api.Channel(targetProcess.pid));
   }
 
-  async levelNameAsync() {
-    const levelNamePointer = new app.CStringPointer(this.region.start + coreOffsets.levelName, 32);
-    await this.process.batch(levelNamePointer).readAsync();
-    return levelNamePointer.value;
+  async runAsync(renderFrame: () => void) {
+    await this.channel.runAsync(renderFrame);
   }
-
-  async playersAsync() {
-    const localPlayerPointer = new app.UInt64Pointer(this.region.start + coreOffsets.localPlayer);
-    const playerPointers = maxPlayers.map(x => new app.UInt64Pointer(this.region.start + coreOffsets.clEntityList + BigInt(x << 5)));
-    await this.process.batch(localPlayerPointer, playerPointers).readAsync();
-    const localPlayerAddress = localPlayerPointer.value;
-    const playerAddresses = playerPointers.map(x => x.value).filter(Boolean);
-    const players = playerAddresses.map(x => new app.Player(x, localPlayerAddress === x));
-    await this.process.batch(pointersOf(players)).readAsync();
-    return players.filter(x => x.isValid);
-  }
-}
-
-function pointersOf(players: Array<app.Player>): Array<app.Pointer> {
-  return players.flatMap(x => Object.values(x).filter(y => y instanceof app.Pointer));
 }
