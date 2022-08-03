@@ -2,7 +2,7 @@ import * as app from '..';
 
 export class Vector extends app.api.Adapter<app.api.EntityMember> {
   constructor(offset: number, interval = 0) {
-    super(new app.api.EntityMember(offset, interval, 0xC));
+    super(new app.api.EntityMember(offset, interval, 12));
   }
 
   get value(): IVector {
@@ -14,7 +14,7 @@ export class Vector extends app.api.Adapter<app.api.EntityMember> {
 
   set value(value: IVector) {
     if (this.value.x === value.x && this.value.y === value.y && this.value.z === value.z) return;
-    this.source.sendChange = new DataView(new ArrayBuffer(0xC));
+    this.source.sendChange = new DataView(new ArrayBuffer(12));
     this.source.sendChange.setFloat32(0, value.x, true);
     this.source.sendChange.setFloat32(4, value.y, true);
     this.source.sendChange.setFloat32(8, value.z, true);

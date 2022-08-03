@@ -1,18 +1,16 @@
 import * as app from '..';
-import {entityOffsets} from '../offsets/entityOffsets';
-import {playerOffsets} from '../offsets/playerOffsets';
 
 export class Player extends app.api.Adapter<app.api.Entity> {
   constructor(
     readonly address: bigint,
-    readonly localOrigin = new app.Vector(entityOffsets.localOrigin),
-    readonly teamNum = new app.UInt8(entityOffsets.iTeamNum, 1000),
-    readonly name = new app.UInt64(entityOffsets.iName, 1000),
-    readonly glowEnable = new app.UInt8(entityOffsets.glowEnable),
-    readonly glowThroughWalls = new app.UInt8(entityOffsets.glowThroughWall),
-    readonly lifeState = new app.UInt8(playerOffsets.lifeState),
-    readonly viewAngles = new app.Vector(playerOffsets.viewAngles),
-    readonly bleedoutState = new app.UInt8(playerOffsets.bleedoutState)) {
+    readonly localOrigin = new app.Vector(app.entityOffsets.localOrigin),
+    readonly teamNum = new app.UInt8(app.entityOffsets.iTeamNum, 1000),
+    readonly name = new app.UInt64(app.entityOffsets.iName, 1000),
+    readonly glowEnable = new app.UInt8(app.entityOffsets.glowEnable),
+    readonly glowThroughWalls = new app.UInt8(app.entityOffsets.glowThroughWall),
+    readonly lifeState = new app.UInt8(app.playerOffsets.lifeState),
+    readonly viewAngles = new app.Vector(app.playerOffsets.viewAngles),
+    readonly bleedoutState = new app.UInt8(app.playerOffsets.bleedoutState)) {
     super(new app.api.Entity(address, [localOrigin, teamNum, name, glowEnable, glowThroughWalls, lifeState, viewAngles, bleedoutState]));
   }
 

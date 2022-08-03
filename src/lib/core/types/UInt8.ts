@@ -2,7 +2,7 @@ import * as app from '..';
 
 export class UInt8 extends app.api.Adapter<app.api.EntityMember> {
   constructor(offset: number, interval = 0) {
-    super(new app.api.EntityMember(offset, interval, 0x1));
+    super(new app.api.EntityMember(offset, interval, 1));
   }
 
   get value() {

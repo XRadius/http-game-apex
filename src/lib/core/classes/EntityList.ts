@@ -6,8 +6,8 @@ export class EntityList extends app.api.Adapter<app.api.Entity> {
 
   constructor(address: bigint,
     private readonly channel: app.api.Channel,
-    private readonly entities = maxEntities.map(x => new app.UInt64(x << 5, 1000))) {
-    super(new app.api.Entity(address, entities));
+    private readonly pointers = maxEntities.map(x => new app.UInt64(x << 5, 1000))) {
+    super(new app.api.Entity(address, pointers));
     this.source.emitter.addEventListener('postReceive', this.onPostReceive.bind(this));
   }
 
@@ -37,13 +37,13 @@ export class EntityList extends app.api.Adapter<app.api.Entity> {
   }
 
   private onPostReceive() {
-    const values = this.entities
+    const addresses = this.pointers
       .map(x => x.value)
       .filter(Boolean);
-    this.handleCreates(values
+    this.handleCreates(addresses
       .filter(x => !this.players[x.toString(16)]));
     this.handleDeletes(Object.keys(this.players)
       .map(x => BigInt(`0x${x}`))
-      .filter(x => !values.includes(x)));
+      .filter(x => !addresses.includes(x)));
   }
 }

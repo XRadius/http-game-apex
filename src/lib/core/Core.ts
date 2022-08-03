@@ -1,10 +1,9 @@
 import * as app from '.';
-import {coreOffsets} from './offsets/coreOffsets';
 
 export class Core {
-  readonly entityList = new app.EntityList(this.address + coreOffsets.clEntityList, this.channel);
-  readonly levelName = new app.LevelName(this.address + coreOffsets.levelName);
-  readonly localPlayer = new app.LocalPlayer(this.address + coreOffsets.localPlayer);
+  readonly entityList = new app.EntityList(this.address + app.coreOffsets.clEntityList, this.channel);
+  readonly levelName = new app.LevelName(this.address + app.coreOffsets.levelName);
+  readonly localPlayer = new app.LocalPlayer(this.address + app.coreOffsets.localPlayer);
 
   private constructor(
     private readonly address: bigint,
@@ -20,7 +19,7 @@ export class Core {
     if (!targetProcess) throw new Error('Invalid process!');
     const regions = await targetProcess.regionsAsync();
     const targetRegion = regions.find(x => x.pathname.toLowerCase().endsWith('r5apex.exe'))
-      ?? regions.find(x => x.perms == 0x1 && x.pathname.startsWith('/memfd'))
+      ?? regions.find(x => x.perms == 1 && x.pathname.startsWith('/memfd'))
       ?? regions.find(x => x.start === BigInt(0x140000000));
     if (!targetRegion) throw new Error('Invalid region!');
     return new Core(targetRegion.start, new app.api.Channel(targetProcess.pid));

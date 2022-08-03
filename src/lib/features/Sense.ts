@@ -11,12 +11,8 @@ export class Sense {
       const dy = (localPlayer.localOrigin.value.y - x.localOrigin.value.y) * 0.0254;
       const r = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
       if (r < this.maximumDistance) {
-        const glowEnable = 7;
-        const glowThroughWalls = 2;
-        if (x.glowEnable.value !== glowEnable || x.glowThroughWalls.value !== glowThroughWalls) {
-          x.glowEnable.value = glowEnable;
-          x.glowThroughWalls.value = glowThroughWalls;
-        }
+        x.glowEnable.value = 7;
+        x.glowThroughWalls.value = 2;
       }
     }
   }
