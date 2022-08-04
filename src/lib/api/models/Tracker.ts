@@ -32,32 +32,32 @@ export class Tracker {
     }
   }
 
-  receive(update: app.UpdateArray) {
+  receive(update: app.EntityUpdate) {
     for (const x of update.entities) {
       this.aliveEntities[x.address.toString(16)]?.receive(x);
     }
   }
 
-  update(writer: app.BinaryWriter) {
+  update(stream: app.BinaryWriter) {
     for (const [k, x] of Object.entries(this.deleteEntities)) {
-      const packet = new app.DeleteEntity(x.address);
-      writer.writeUInt8(app.PacketType.DeleteEntity);
-      packet.write(writer);
+      const packet = new app.EntityDelete(x.address);
+      stream.writeUInt8(app.PacketType.EntityDelete);
+      packet.write(stream);
       delete this.deleteEntities[k];
     }
     for (const [k, x] of Object.entries(this.createEntities)) {
       this.aliveEntities[k] = x;
-      const members = Object.values(x.members).map(x => new app.CreateEntityMember(x.offset, x.interval, x.buffer.byteLength));
-      const packet = new app.CreateEntity(x.address, members);
-      writer.writeUInt8(app.PacketType.CreateEntity);
-      packet.write(writer);
+      const members = Object.values(x.members).map(x => new app.EntityCreateMember(x.offset, x.interval, x.buffer.byteLength));
+      const packet = new app.EntityCreate(x.address, members);
+      stream.writeUInt8(app.PacketType.EntityCreate);
+      packet.write(stream);
       delete this.createEntities[k];
     }
     for (const x of Object.values(this.aliveEntities)) {
       const packet = x.update();
       if (!packet) continue;
-      writer.writeUInt8(app.PacketType.ChangeEntity);
-      packet.write(writer);
+      stream.writeUInt8(app.PacketType.EntityChange);
+      packet.write(stream);
     }
   }
 }

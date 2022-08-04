@@ -12,7 +12,7 @@ export class EntityMember {
     this.offset = offset;
   }
 
-  receive(update: app.UpdateEntityMember) {
+  receive(update: app.EntityUpdateEntityMember) {
     if (update.buffer.byteLength === this.buffer.byteLength) {
       for (let i = 0; i < update.buffer.byteLength; i++) {
         this.buffer.setInt8(i, update.buffer.getInt8(i));
@@ -21,7 +21,7 @@ export class EntityMember {
   }
 
   update() {
-    const packet = this.sendChange && new app.ChangeEntityMember(this.offset, this.sendChange);
+    const packet = this.sendChange && new app.EntityChangeMember(this.offset, this.sendChange);
     delete this.sendChange;
     return packet;
   }

@@ -1,6 +1,6 @@
 import * as app from '..';
 
-export class UpdateEntityMember {
+export class EntityUpdateEntityMember {
   private constructor(offset: number, buffer: DataView) {
     this.offset = offset;
     this.buffer = buffer;
@@ -8,8 +8,8 @@ export class UpdateEntityMember {
 
   static create(stream: app.BinaryReader) {
     const offset = stream.readUInt16();
-    const buffer = stream.readByteArray();
-    return new UpdateEntityMember(offset, buffer);
+    const buffer = stream.readKnownByteArray();
+    return new EntityUpdateEntityMember(offset, buffer);
   }
 
   readonly offset: number;

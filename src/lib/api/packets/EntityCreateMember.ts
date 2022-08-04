@@ -1,6 +1,6 @@
 import * as app from '..';
 
-export class CreateEntityMember implements app.IPacketWriter {
+export class EntityCreateMember implements app.IPacketWriter {
   constructor(offset: number, interval: number, size: number) {
     this.offset = offset;
     this.interval = interval;

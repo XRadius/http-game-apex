@@ -13,14 +13,14 @@ export class BinaryWriter {
     return Boolean(this.offset);
   }
 
-  writeByteArray(value: DataView) {
+  writeKnownByteArray(value: DataView) {
     this.writeUInt16(value.byteLength);
     for (let i = 0; i < value.byteLength; i++) {
       this.writeUInt8(value.getInt8(i));
     }
   }
 
-  writeEntityArray(values: Array<app.IPacketWriter>) {
+  writeKnownEntityArray(values: Array<app.IPacketWriter>) {
     this.writeUInt16(values.length);
     values.forEach(x => x.write(this));
   }

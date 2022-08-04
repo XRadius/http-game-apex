@@ -11,14 +11,14 @@ export class BinaryReader {
     return this.offset < this.buffer.byteLength - this.buffer.byteOffset;
   }
 
-  readByteArray() {
+  readKnownByteArray() {
     const size = this.readUInt16();
     const buffer = new DataView(this.buffer.buffer, this.buffer.byteOffset + this.offset, size);
     this.offset += size;
     return buffer;
   }
 
-  readEntityArray<T>(factory: (stream: BinaryReader) => T) {
+  readKnownEntityArray<T>(factory: (stream: BinaryReader) => T) {
     const size = this.readUInt16();
     const items = [];
     for (let i = 0; i < size; i++) items[i] = factory(this);

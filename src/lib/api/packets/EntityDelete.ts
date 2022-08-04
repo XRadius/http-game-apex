@@ -1,6 +1,6 @@
 import * as app from '..';
 
-export class DeleteEntity implements app.IPacketWriter {
+export class EntityDelete implements app.IPacketWriter {
   constructor(address: bigint) {
     this.address = address;
   }

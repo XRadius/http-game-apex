@@ -10,7 +10,7 @@ export class Entity {
     this.members = toRecord(members.map(x => x.source));
   }
 
-  receive(update: app.UpdateEntity) {
+  receive(update: app.EntityUpdateEntity) {
     this.emitter.dispatchEvent(new Event('preReceive'));
     update.members.forEach(x => this.members[x.offset.toString(16)]?.receive(x));
     this.emitter.dispatchEvent(new Event('postReceive'));
@@ -22,7 +22,7 @@ export class Entity {
       .filter(Boolean)
       .map(x => x!);
     return packets.length
-      ? new app.ChangeEntity(this.address, packets)
+      ? new app.EntityChange(this.address, packets)
       : undefined;
   }
 }

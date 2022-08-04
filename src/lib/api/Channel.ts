@@ -39,11 +39,11 @@ export class Channel {
 
   private receive(ev: MessageEvent) {
     if (ev.data instanceof ArrayBuffer) {
-      const reader = new app.BinaryReader(new DataView(ev.data));
-      while (reader.hasBytes()) {
-        switch (reader.readUInt8() as app.PacketType) {
-          case app.PacketType.Update:
-            this.tracker.receive(app.UpdateArray.create(reader));
+      const stream = new app.BinaryReader(new DataView(ev.data));
+      while (stream.hasBytes()) {
+        switch (stream.readUInt8() as app.PacketType) {
+          case app.PacketType.EntityUpdate:
+            this.tracker.receive(app.EntityUpdate.create(stream));
             break;
         }
       }
@@ -51,14 +51,14 @@ export class Channel {
   }
 
   private update() {
-    const writer = new app.BinaryWriter();
-    this.tracker.update(writer);
+    const stream = new app.BinaryWriter();
+    this.tracker.update(stream);
     if (!this.nextActiveTime || this.nextActiveTime < Date.now()) {
-      writer.writeUInt8(app.PacketType.Activity);
+      stream.writeUInt8(app.PacketType.Activity);
       this.nextActiveTime = Date.now() + 10000;
-      this.socket.send(writer.toBuffer());
-    } else if (writer.hasBytes()) {
-      this.socket.send(writer.toBuffer());
+      this.socket.send(stream.toBuffer());
+    } else if (stream.hasBytes()) {
+      this.socket.send(stream.toBuffer());
     }
   }
 }
