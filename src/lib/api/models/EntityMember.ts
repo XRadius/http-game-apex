@@ -1,10 +1,11 @@
 import * as app from '..';
 
 export class EntityMember {
+  private syncId?: number;
   readonly buffer: DataView;
   readonly interval: number;
   readonly offset: number;
-  sendChange?: DataView;
+  send?: boolean;
 
   constructor(offset: number, interval: number, size: number) {
     this.buffer = new DataView(new ArrayBuffer(size));
@@ -12,17 +13,32 @@ export class EntityMember {
     this.offset = offset;
   }
 
-  receive(update: app.EntityUpdateEntityMember) {
-    if (update.buffer.byteLength === this.buffer.byteLength) {
+  receive(value: app.BasicSync | app.EntityUpdateEntityMember) {
+    if (value instanceof app.EntityUpdateEntityMember) {
+      this.handleUpdate(value);
+    } else {
+      this.handleSync(value);
+    }
+  }
+
+  update(syncId: number) {
+    if (!this.send) return;
+    this.send = false;
+    this.syncId = syncId;
+    return new app.EntityChangeMember(this.offset, this.buffer);
+  }
+
+  private handleUpdate(update: app.EntityUpdateEntityMember) {
+    if (!this.syncId && update.buffer.byteLength === this.buffer.byteLength) {
       for (let i = 0; i < update.buffer.byteLength; i++) {
         this.buffer.setInt8(i, update.buffer.getInt8(i));
       }
     }
   }
 
-  update() {
-    const packet = this.sendChange && new app.EntityChangeMember(this.offset, this.sendChange);
-    delete this.sendChange;
-    return packet;
+  private handleSync(sync: app.BasicSync) {
+    if (this.syncId === sync.id) {
+      delete this.syncId;
+    }
   }
 }

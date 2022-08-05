@@ -6,6 +6,7 @@ export class EntityDelete implements app.IPacketWriter {
   }
 
   write(stream: app.BinaryWriter) {
+    stream.writeUInt8(app.PacketType.EntityDelete);
     stream.writeUInt64(this.address);
   }
 

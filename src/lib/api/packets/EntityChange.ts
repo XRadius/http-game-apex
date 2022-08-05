@@ -7,6 +7,7 @@ export class EntityChange implements app.IPacketWriter {
   }
 
   write(stream: app.BinaryWriter) {
+    stream.writeUInt8(app.PacketType.EntityChange);
     stream.writeUInt64(this.address);
     stream.writeKnownEntityArray(this.changes);
   }

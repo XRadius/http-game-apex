@@ -11,8 +11,8 @@ export class UInt64 extends app.api.Adapter<app.api.EntityMember> {
 
   set value(value: bigint) {
     if (value === this.value) return;
-    this.source.sendChange = new DataView(new ArrayBuffer(8));
-    this.source.sendChange.setBigUint64(0, value, true);
+    this.source.buffer.setBigUint64(0, value, true);
+    this.source.send = true;
   }
 
   toString() {

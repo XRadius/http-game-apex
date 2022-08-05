@@ -1,5 +1,6 @@
 export enum PacketType {
-  Activity,
+  BasicAlive,
+  BasicSync,
   EntityChange,
   EntityCreate,
   EntityDelete,

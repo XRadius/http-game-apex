@@ -1,6 +1,6 @@
 import * as app from '..';
 
-export class Tracker {
+export class EntityProvider implements app.IPacketProvider {
   private readonly aliveEntities: Record<string, app.Entity>;
   private readonly createEntities: Record<string, app.Entity>;
   private readonly deleteEntities: Record<string, app.Entity>;
@@ -32,32 +32,35 @@ export class Tracker {
     }
   }
 
-  receive(update: app.EntityUpdate) {
-    for (const x of update.entities) {
-      this.aliveEntities[x.address.toString(16)]?.receive(x);
+  receive(value: app.BasicSync | app.EntityUpdate) {
+    if (value instanceof app.EntityUpdate) {
+      this.handleUpdate(value);
+    } else {
+      this.handleSync(value);
     }
   }
 
-  update(stream: app.BinaryWriter) {
+  update(stream: app.BinaryWriter, syncId: number) {
     for (const [k, x] of Object.entries(this.deleteEntities)) {
-      const packet = new app.EntityDelete(x.address);
-      stream.writeUInt8(app.PacketType.EntityDelete);
-      packet.write(stream);
+      new app.EntityDelete(x.address).write(stream);
       delete this.deleteEntities[k];
     }
     for (const [k, x] of Object.entries(this.createEntities)) {
       this.aliveEntities[k] = x;
       const members = Object.values(x.members).map(x => new app.EntityCreateMember(x.offset, x.interval, x.buffer.byteLength));
-      const packet = new app.EntityCreate(x.address, members);
-      stream.writeUInt8(app.PacketType.EntityCreate);
-      packet.write(stream);
+      new app.EntityCreate(x.address, members).write(stream);
       delete this.createEntities[k];
     }
     for (const x of Object.values(this.aliveEntities)) {
-      const packet = x.update();
-      if (!packet) continue;
-      stream.writeUInt8(app.PacketType.EntityChange);
-      packet.write(stream);
+      x.update(syncId)?.write(stream);
     }
+  }
+
+  private handleUpdate(update: app.EntityUpdate) {
+    update.entities.forEach(x => this.aliveEntities[x.address.toString(16)]?.receive(x));
+  }
+
+  private handleSync(sync: app.BasicSync) {
+    Object.values(this.aliveEntities).forEach(x => x.receive(sync));
   }
 }

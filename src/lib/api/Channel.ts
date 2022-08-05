@@ -1,23 +1,25 @@
 import * as app from '.';
 
 export class Channel {
-  private readonly tracker: app.Tracker;
+  private readonly alive: app.AliveProvider;
+  private readonly entities: app.EntityProvider;
   private readonly socket: WebSocket;
-  private nextActiveTime?: number;
+  private syncId = 0;
 
   constructor(pid: number) {
+    this.alive = new app.AliveProvider();
+    this.entities = new app.EntityProvider();
     this.socket = new WebSocket(`ws://${location.host}/ws/direct/${pid}`);
     this.socket.binaryType = 'arraybuffer';
     this.socket.addEventListener('message', x => this.receive(x));
-    this.tracker = new app.Tracker();
   }
 
   create(adapter: app.Adapter<app.Entity>) {
-    this.tracker.create(adapter.source);
+    this.entities.create(adapter.source);
   }
 
   delete(adapter: app.Adapter<app.Entity>) {
-    this.tracker.delete(adapter.source);
+    this.entities.delete(adapter.source);
   }
 
   async runAsync(renderFrame: () => void) {
@@ -42,8 +44,11 @@ export class Channel {
       const stream = new app.BinaryReader(new DataView(ev.data));
       while (stream.hasBytes()) {
         switch (stream.readUInt8() as app.PacketType) {
+          case app.PacketType.BasicSync:
+            this.entities.receive(app.BasicSync.create(stream));
+            break;
           case app.PacketType.EntityUpdate:
-            this.tracker.receive(app.EntityUpdate.create(stream));
+            this.entities.receive(app.EntityUpdate.create(stream));
             break;
         }
       }
@@ -52,13 +57,12 @@ export class Channel {
 
   private update() {
     const stream = new app.BinaryWriter();
-    this.tracker.update(stream);
-    if (!this.nextActiveTime || this.nextActiveTime < Date.now()) {
-      stream.writeUInt8(app.PacketType.Activity);
-      this.nextActiveTime = Date.now() + 10000;
+    this.alive.update(stream);
+    this.entities.update(stream, this.syncId);
+    if (stream.hasBytes()) {
+      new app.BasicSync(this.syncId).write(stream);
       this.socket.send(stream.toBuffer());
-    } else if (stream.hasBytes()) {
-      this.socket.send(stream.toBuffer());
+      this.syncId = this.syncId !== 16383 ? this.syncId + 1 : 0;
     }
   }
 }

@@ -11,8 +11,8 @@ export class UInt8 extends app.api.Adapter<app.api.EntityMember> {
 
   set value(value: number) {
     if (value === this.value) return;
-    this.source.sendChange = new DataView(new ArrayBuffer(1));
-    this.source.sendChange.setInt8(0, value);
+    this.source.buffer.setInt8(0, value);
+    this.source.send = true;
   }
 
   toString() {

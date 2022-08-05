@@ -7,6 +7,7 @@ export class EntityCreate implements app.IPacketWriter {
   }
 
   write(stream: app.BinaryWriter) {
+    stream.writeUInt8(app.PacketType.EntityCreate);
     stream.writeUInt64(this.address);
     stream.writeKnownEntityArray(this.members);
   }
