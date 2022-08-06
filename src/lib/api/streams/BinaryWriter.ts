@@ -1,11 +1,11 @@
 import * as app from '..';
 
 export class BinaryWriter {
-  private readonly buffer: DataView;
+  private buffer: DataView;
   private offset: number;
 
   constructor() {
-    this.buffer = new DataView(new ArrayBuffer(8192));
+    this.buffer = new DataView(new ArrayBuffer(1024));
     this.offset = 0;
   }
 
@@ -26,21 +26,32 @@ export class BinaryWriter {
   }
 
   writeUInt8(value: number) {
+    this.prepare(1);
     this.buffer.setUint8(this.offset, value);
     this.offset += 1;
   }
 
   writeUInt16(value: number) {
+    this.prepare(2);
     this.buffer.setUint16(this.offset, value, true);
     this.offset += 2;
   }
 
   writeUInt64(value: bigint) {
+    this.prepare(8);
     this.buffer.setBigUint64(this.offset, value, true);
     this.offset += 8;
   }
   
   toBuffer() {
     return new DataView(this.buffer.buffer, 0, this.offset);
+  }
+
+  private prepare(count: number) {
+    while (this.offset + count > this.buffer.byteLength) {
+      const result = new DataView(new ArrayBuffer(this.buffer.byteLength * 2));
+      for (let i = 0; i < this.offset; i++) result.setUint8(i, this.buffer.getUint8(i));
+      this.buffer = result;
+    }
   }
 }
