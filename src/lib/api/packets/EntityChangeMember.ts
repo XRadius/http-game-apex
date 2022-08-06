@@ -7,8 +7,9 @@ export class EntityChangeMember implements app.IPacketWriter {
   }
 
   write(stream: app.BinaryWriter) {
-    stream.writeUInt16(this.offset);
-    stream.writeKnownByteArray(this.buffer);
+    stream.writeVariableLength(this.offset);
+    stream.writeVariableLength(this.buffer.byteLength);
+    stream.writeBytes(this.buffer);
   }
 
   readonly offset: number;

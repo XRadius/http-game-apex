@@ -6,13 +6,13 @@ export class BasicSync implements app.IPacketWriter {
   }
 
   static create(stream: app.BinaryReader) {
-    const id = stream.readUInt16();
+    const id = stream.readUInt8();
     return new BasicSync(id);
   }
 
   write(stream: app.BinaryWriter) {
     stream.writeUInt8(app.PacketType.BasicSync);
-    stream.writeUInt16(this.id);
+    stream.writeUInt8(this.id);
   }
 
   readonly id: number;

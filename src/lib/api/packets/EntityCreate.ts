@@ -9,7 +9,8 @@ export class EntityCreate implements app.IPacketWriter {
   write(stream: app.BinaryWriter) {
     stream.writeUInt8(app.PacketType.EntityCreate);
     stream.writeUInt64(this.address);
-    stream.writeKnownEntityArray(this.members);
+    stream.writeVariableLength(this.members.length);
+    this.members.forEach(x => x.write(stream));
   }
 
   readonly address: bigint;

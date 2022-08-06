@@ -1,11 +1,11 @@
 import * as app from '..';
 
 export class EntityMember {
-  private syncId?: number;
   readonly buffer: DataView;
   readonly interval: number;
   readonly offset: number;
   send?: boolean;
+  syncId?: number;
 
   constructor(offset: number, interval: number, size: number) {
     this.buffer = new DataView(new ArrayBuffer(size));

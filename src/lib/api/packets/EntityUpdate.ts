@@ -6,7 +6,8 @@ export class EntityUpdate {
   }
 
   static create(stream: app.BinaryReader) {
-    const members = stream.readKnownEntityArray(app.EntityUpdateEntity.create);
+    const membersSize = stream.readVariableLength();
+    const members = Array(membersSize).fill(0).map(() => app.EntityUpdateEntity.create(stream));
     return new EntityUpdate(members);
   }
 

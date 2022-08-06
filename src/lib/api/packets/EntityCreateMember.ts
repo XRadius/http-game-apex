@@ -8,9 +8,9 @@ export class EntityCreateMember implements app.IPacketWriter {
   }
 
   write(stream: app.BinaryWriter) {
-    stream.writeUInt16(this.offset);
-    stream.writeUInt16(this.interval);
-    stream.writeUInt16(this.size);
+    stream.writeVariableLength(this.offset);
+    stream.writeVariableLength(this.interval);
+    stream.writeVariableLength(this.size);
   }
 
   readonly offset: number;

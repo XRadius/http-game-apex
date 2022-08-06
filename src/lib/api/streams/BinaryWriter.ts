@@ -1,5 +1,3 @@
-import * as app from '..';
-
 export class BinaryWriter {
   private buffer: DataView;
   private offset: number;
@@ -13,16 +11,10 @@ export class BinaryWriter {
     return Boolean(this.offset);
   }
 
-  writeKnownByteArray(value: DataView) {
-    this.writeUInt16(value.byteLength);
+  writeBytes(value: DataView) {
     for (let i = 0; i < value.byteLength; i++) {
-      this.writeUInt8(value.getInt8(i));
+      this.writeUInt8(value.getUint8(i));
     }
-  }
-
-  writeKnownEntityArray(values: Array<app.IPacketWriter>) {
-    this.writeUInt16(values.length);
-    values.forEach(x => x.write(this));
   }
 
   writeUInt8(value: number) {
@@ -31,16 +23,21 @@ export class BinaryWriter {
     this.offset += 1;
   }
 
-  writeUInt16(value: number) {
-    this.prepare(2);
-    this.buffer.setUint16(this.offset, value, true);
-    this.offset += 2;
-  }
-
   writeUInt64(value: bigint) {
     this.prepare(8);
     this.buffer.setBigUint64(this.offset, value, true);
     this.offset += 8;
+  }
+  
+  writeVariableLength(value: number) {
+    let more = true;
+    while (more) {
+      let chunk = value & 0x7F;
+      value >>= 7;
+      more = value != 0;
+      chunk |= more ? 0x80 : 0;
+      this.writeUInt8(chunk);
+    }
   }
   
   toBuffer() {

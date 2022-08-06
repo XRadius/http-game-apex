@@ -8,7 +8,8 @@ export class EntityUpdateEntity {
 
   static create(stream: app.BinaryReader) {
     const address = stream.readUInt64();
-    const members = stream.readKnownEntityArray(app.EntityUpdateEntityMember.create);
+    const membersSize = stream.readVariableLength();
+    const members = Array(membersSize).fill(0).map(() => app.EntityUpdateEntityMember.create(stream));
     return new EntityUpdateEntity(address, members);
   }
 

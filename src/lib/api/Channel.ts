@@ -62,7 +62,7 @@ export class Channel {
     if (stream.hasBytes()) {
       new app.BasicSync(this.syncId).write(stream);
       this.socket.send(stream.toBuffer());
-      this.syncId = this.syncId !== 16383 ? this.syncId + 1 : 0;
+      this.syncId = this.syncId !== 255 ? this.syncId + 1 : 0;
     }
   }
 }

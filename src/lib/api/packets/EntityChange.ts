@@ -9,7 +9,8 @@ export class EntityChange implements app.IPacketWriter {
   write(stream: app.BinaryWriter) {
     stream.writeUInt8(app.PacketType.EntityChange);
     stream.writeUInt64(this.address);
-    stream.writeKnownEntityArray(this.changes);
+    stream.writeVariableLength(this.changes.length);
+    this.changes.forEach(x => x.write(stream));
   }
 
   readonly address: bigint;
