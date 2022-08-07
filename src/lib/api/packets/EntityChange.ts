@@ -1,18 +1,18 @@
 import * as app from '..';
 
 export class EntityChange implements app.IPacketWriter {
-  constructor(address: bigint, changes: Array<app.EntityChangeMember>) {
-    this.address = address;
+  constructor(id: number, changes: Array<app.EntityChangeMember>) {
+    this.id = id;
     this.changes = changes;
   }
 
   write(stream: app.BinaryWriter) {
     stream.writeUInt8(app.PacketType.EntityChange);
-    stream.writeUInt64(this.address);
+    stream.writeVariableLength(this.id);
     stream.writeVariableLength(this.changes.length);
     this.changes.forEach(x => x.write(stream));
   }
 
-  readonly address: bigint;
+  readonly id: number;
   readonly changes: Array<app.EntityChangeMember>;
 }

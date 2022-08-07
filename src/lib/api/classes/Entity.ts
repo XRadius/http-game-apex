@@ -18,13 +18,13 @@ export class Entity {
     }
   }
 
-  update(syncId: number) {
+  update(id: number, syncId: number) {
     const packets = Object.values(this.members)
       .map(x => x.update(syncId))
       .filter(Boolean)
       .map(x => x!);
     return packets.length
-      ? new app.EntityChange(this.address, packets)
+      ? new app.EntityChange(id, packets)
       : undefined;
   }
 
