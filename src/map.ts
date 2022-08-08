@@ -21,12 +21,12 @@ async function renderAsync(core: app.core.Core, sense: app.features.Sense) {
     const localPlayer = players.find(x => x.address === core.localPlayer.value);
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    renderFrame(levelName, localPlayer, players),
+    renderFrame(levelName, localPlayer, [...core.npcList.value, ...players]),
     updateSense(localPlayer, players, sense);
   });
 }
 
-function renderFrame(levelName: string, localPlayer: app.core.Player | undefined, players: Array<app.core.Player>) {
+function renderFrame(levelName: string, localPlayer: app.core.Player | undefined, players: Array<app.core.NPC | app.core.Player>) {
   map.refresh(levelName);
   if (!localPlayer) return;
   map.renderAll(localPlayer, players);

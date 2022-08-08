@@ -23,7 +23,7 @@ export class Map {
     this.renderBackground();
   }
 
-  renderAll(localPlayer: app.core.Player, players: Array<app.core.Player>) {
+  renderAll(localPlayer: app.core.Player, players: Array<app.core.NPC | app.core.Player>) {
     for (const x of players) {
       this.renderOne(x.localOrigin.value, x.createColor(localPlayer));
     }

@@ -16,29 +16,19 @@ ui(x => renderAsync(x, new app.features.Sense()).finally(() => {
 
 async function renderAsync(core: app.core.Core, sense: app.features.Sense) {
   await core.runAsync(() => {
-    const levelName = core.levelName.value;
     const players = core.playerList.value;
     const localPlayer = players.find(x => x.address === core.localPlayer.value);
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    renderFrame(levelName, localPlayer, players),
+    renderFrame(localPlayer, [...core.npcList.value, ...players]),
     updateSense(localPlayer, players, sense);
   });
 }
 
-function renderFrame(levelName: string, localPlayer: app.core.Player | undefined, players: Array<app.core.Player>) {
-  switch (levelName) {
-    case 'mp_rr_canyonlands_staging':
-      radar.refresh();
-      if (!localPlayer) break;
-      radar.renderOne(localPlayer, {x: 31482.994140625, y: -6708.69677734375, z: 0}, '#FFF');
-      break;
-    default:
-      radar.refresh();
-      if (!localPlayer) break;
-      radar.renderAll(localPlayer, players);
-      break;
-  }
+function renderFrame(localPlayer: app.core.Player | undefined, players: Array<app.core.NPC | app.core.Player>) {
+  radar.refresh();
+  if (!localPlayer) return;
+  radar.renderAll(localPlayer, players);
 }
 
 function updateSense(localPlayer: app.core.Player | undefined, players: Array<app.core.Player>, sense: app.features.Sense) {

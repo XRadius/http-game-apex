@@ -20,7 +20,7 @@ export class Radar {
     this.renderRings();
   }
 
-  renderAll(localPlayer: app.core.Player, players: Array<app.core.Player>) {
+  renderAll(localPlayer: app.core.Player, players: Array<app.core.NPC | app.core.Player>) {
     for (const x of players) {
       if (x.address === localPlayer.address) continue;
       this.renderOne(localPlayer, x.localOrigin.value, x.createColor(localPlayer));

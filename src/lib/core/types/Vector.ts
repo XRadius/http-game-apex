@@ -21,7 +21,7 @@ export class Vector extends app.api.Adapter<app.api.EntityMember> {
   }
 
   toString() {
-    return this.value.toString();
+    return app.serialize(this.value);
   }
 }
 

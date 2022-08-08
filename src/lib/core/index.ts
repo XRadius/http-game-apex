@@ -7,6 +7,7 @@ export * from './classes/LevelName';
 export * from './classes/LocalPlayer';
 export * from './classes/Signifier';
 export * from './classes/SignifierList';
+export * from './entities/NPC';
 export * from './entities/Player';
 export * from './offsets/coreOffsets';
 export * from './offsets/entityOffsets';
