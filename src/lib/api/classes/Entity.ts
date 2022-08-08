@@ -4,10 +4,12 @@ export class Entity {
   readonly address: bigint;
   readonly emitter = new EventTarget();
   readonly members: Record<string, app.EntityMember>;
+  readonly requestBatch: boolean;
 
-  constructor(address: bigint, members: Array<app.Adapter<app.EntityMember>>) {
+  constructor(address: bigint, members: Array<app.Adapter<app.EntityMember>>, requestBatch = false) {
     this.address = address;
     this.members = toRecord(members.map(x => x.source));
+    this.requestBatch = requestBatch;
   }
 
   receive(value: app.BasicSync | app.EntityUpdateEntity) {

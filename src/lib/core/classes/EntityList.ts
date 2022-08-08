@@ -1,12 +1,12 @@
 import * as app from '..';
-const maxEntities = Array(1000).fill(0).map((_, i) => i);
+const maxEntities = 0x10000;
 
 export class EntityList extends app.api.Adapter<app.api.Entity> {
   constructor(address: bigint,
     private readonly channel: app.api.Channel,
     private readonly entities: Record<string, app.Entity> = {},
-    private readonly pointers = maxEntities.map(x => new app.UInt64(x << 5, 1000))) {
-    super(new app.api.Entity(address, pointers));
+    private readonly pointers = Array(maxEntities).fill(0).map((_, i) => new app.UInt64(i << 5, 1000))) {
+    super(new app.api.Entity(address, pointers, true));
     this.source.emitter.addEventListener('postReceive', this.onPostReceive.bind(this));
   }
 
