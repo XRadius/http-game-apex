@@ -16,9 +16,9 @@ const path = require('path');
   writeAsync('entityOffsets', {
     localOrigin: Number(find(cBaseEntity, 'm_localOrigin')) + 0x100,
     iTeamNum: Number(find(cBaseEntity, 'm_iTeamNum')),
-    iName: Number(find(cBaseEntity, 'm_iName')),
     glowEnable: Number(BigInt(0x3c8)),
-    glowThroughWall: Number(BigInt(0x3d0))
+    glowThroughWall: Number(BigInt(0x3d0)),
+    iSignifierName: Number(find(cBaseEntity, 'm_iSignifierName')),
   });
 
   writeAsync('playerOffsets', {

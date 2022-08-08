@@ -1,13 +1,15 @@
 import * as app from '.';
 
 export class Core {
-  readonly entityList = new app.EntityList(this.address + app.coreOffsets.clEntityList, this.channel);
   readonly levelName = new app.LevelName(this.address + app.coreOffsets.levelName);
   readonly localPlayer = new app.LocalPlayer(this.address + app.coreOffsets.localPlayer);
-
+  readonly playerList = new app.EntityListFilter(app.Player, 'player');
+  
   private constructor(
     private readonly address: bigint,
-    private readonly channel: app.api.Channel) {
+    private readonly channel: app.api.Channel,
+    private readonly entityList = new app.EntityList(address + app.coreOffsets.clEntityList, channel),
+    private readonly signifierList = new app.SignifierList(channel)) {
     this.channel.create(this.entityList);
     this.channel.create(this.levelName);
     this.channel.create(this.localPlayer);
@@ -26,6 +28,9 @@ export class Core {
   }
 
   async runAsync(renderFrame: () => void) {
-    await this.channel.runAsync(renderFrame);
+    await this.channel.runAsync(() => {
+      this.playerList.update(this.channel, this.entityList, this.signifierList);
+      renderFrame();
+    });
   }
 }

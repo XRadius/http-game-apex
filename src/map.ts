@@ -17,7 +17,7 @@ ui(x => renderAsync(x, new app.features.Sense()).finally(() => {
 async function renderAsync(core: app.core.Core, sense: app.features.Sense) {
   await core.runAsync(() => {
     const levelName = core.levelName.value;
-    const players = core.entityList.value;
+    const players = core.playerList.value;
     const localPlayer = players.find(x => x.address === core.localPlayer.value);
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;

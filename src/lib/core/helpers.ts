@@ -4,9 +4,3 @@ export function serialize<T>(item: T) {
     .map(([k, v]) => `${k}=${v}`)
     .join(',')})`;
 }
-
-export function shallowEquals<T>(item: T, otherItem: T) {
-  return Object.entries(item)
-    .map(([k, v]) => [v, otherItem[k as keyof T]])
-    .every(([a, b]) => a === b);
-}

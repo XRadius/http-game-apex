@@ -11,7 +11,7 @@ ui((x) => {
 
 async function renderAsync(core: app.core.Core, sense: app.features.Sense) {
   await core.runAsync(() => {
-    const players = core.entityList.value;
+    const players = core.playerList.value;
     const localPlayer = players.find(x => x.address === core.localPlayer.value);
     if (localPlayer) sense.updateStates(localPlayer, players);
   });
