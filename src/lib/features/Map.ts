@@ -23,20 +23,16 @@ export class Map {
     this.renderBackground();
   }
 
-  renderAll(localPlayer: app.core.Player, players: Array<app.core.NPC | app.core.Player>) {
-    for (const x of players) {
-      this.renderOne(x.localOrigin.value, x.createColor(localPlayer));
-    }
-  }
-
-  renderOne(localOrigin: app.core.IVector, style: string | CanvasGradient | CanvasPattern) {
+  renderPlayers(localPlayer: app.core.Player, players: Array<app.core.Player>) {
     if (!this.map) return;
-    const x = this.shiftX + (1 / this.image.width * this.scaleX) * (localOrigin.x - this.map.x) / this.ratioX;
-    const y = this.shiftY + (1 / this.image.height * this.scaleY) * (localOrigin.y - this.map.y) / -this.ratioY;
-    this.context.beginPath();
-    this.context.arc(x, y, this.scaleR * 8, 0, Math.PI * 2);
-    this.context.fillStyle = style;
-    this.context.fill();
+    for (const player of players) {
+      const x = this.shiftX + (1 / this.image.width * this.scaleX) * (player.localOrigin.value.x - this.map.x) / this.ratioX;
+      const y = this.shiftY + (1 / this.image.height * this.scaleY) * (player.localOrigin.value.y - this.map.y) / -this.ratioY;
+      this.context.beginPath();
+      this.context.arc(x, y, this.scaleR * 8, 0, Math.PI * 2);
+      this.context.fillStyle = player.createColor(localPlayer);
+      this.context.fill();
+    }
   }
 
   private fetch(levelName: string) {

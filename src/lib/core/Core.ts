@@ -3,6 +3,7 @@ import * as app from '.';
 export class Core {
   readonly levelName = new app.LevelName(this.address + app.coreOffsets.levelName);
   readonly localPlayer = new app.LocalPlayer(this.address + app.coreOffsets.localPlayer);
+  readonly itemList = new app.EntityListFilter(app.Item, 'prop_survival');
   readonly npcList = new app.EntityListFilter(app.NPC, 'npc_dummie');
   readonly playerList = new app.EntityListFilter(app.Player, 'player');
   
@@ -29,7 +30,7 @@ export class Core {
   }
 
   async runAsync(renderFrame: () => void) {
-    const filterLists = [this.npcList, this.playerList];
+    const filterLists = [this.itemList, this.npcList, this.playerList];
     await this.channel.runAsync(() => {
       filterLists.forEach(x => x.update(this.channel, this.entityList, this.signifierList));
       renderFrame();

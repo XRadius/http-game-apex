@@ -20,26 +20,56 @@ export class Radar {
     this.renderRings();
   }
 
-  renderAll(localPlayer: app.core.Player, players: Array<app.core.NPC | app.core.Player>) {
-    for (const x of players) {
-      if (x.address === localPlayer.address) continue;
-      this.renderOne(localPlayer, x.localOrigin.value, x.createColor(localPlayer));
+  renderItems(localPlayer: app.core.Player, items: Array<app.core.Item>) {
+    for (const item of items) {
+      if (!item.hasColor) continue;
+      const position = this.calculatePosition(localPlayer, item.localOrigin);
+      if (position) {
+        this.context.beginPath();
+        this.context.arc(position.x, position.y, this.outerRadius / 80, 0, Math.PI * 2);
+        this.context.fillStyle = item.createColor() ?? '#FFF';
+        this.context.fill();
+      }
+    }
+  }
+  
+  renderNpcs(localPlayer: app.core.Player, npcs: Array<app.core.NPC>) {
+    for (const npc of npcs) {
+      const position = this.calculatePosition(localPlayer, npc.localOrigin);
+      if (position) {
+        this.context.beginPath();
+        this.context.arc(position.x, position.y, this.outerRadius / 40, 0, Math.PI * 2);
+        this.context.fillStyle = npc.createColor();
+        this.context.fill();
+      }
     }
   }
 
-  renderOne(localPlayer: app.core.Player, localOrigin: app.core.IVector, style: string | CanvasGradient | CanvasPattern) {
-    const dx = (localPlayer.localOrigin.value.x - localOrigin.x) * 0.0254;
-    const dy = (localPlayer.localOrigin.value.y - localOrigin.y) * 0.0254;
+  renderPlayers(localPlayer: app.core.Player, players: Array<app.core.Player>) {
+    for (const player of players) {
+      if (player === localPlayer) continue;
+      const position = this.calculatePosition(localPlayer, player.localOrigin);
+      if (position) {
+        this.context.beginPath();
+        this.context.arc(position.x, position.y, this.outerRadius / 40, 0, Math.PI * 2);
+        this.context.fillStyle = player.createColor(localPlayer);
+        this.context.fill();
+      }
+    }
+  }
+
+  private calculatePosition(localPlayer: app.core.Player, origin: app.core.Vector) {
+    const dx = (localPlayer.localOrigin.value.x - origin.value.x) * 0.0254;
+    const dy = (localPlayer.localOrigin.value.y - origin.value.y) * 0.0254;
     const r = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     if (r < this.maximumDistance) {
       const s = this.outerRadius / this.maximumDistance;
       const a = Math.sign(dy) * Math.acos(dx / r) - localPlayer.viewAngles.value.y * Math.PI / 180;
       const x = this.centerX + Math.sin(a) * r * s;
       const y = this.centerY + Math.cos(a) * r * s;
-      this.context.beginPath();
-      this.context.arc(x, y, this.outerRadius / 40, 0, Math.PI * 2);
-      this.context.fillStyle = style;
-      this.context.fill();
+      return {x, y};
+    } else {
+      return;
     }
   }
 
