@@ -34,8 +34,8 @@ export class Item extends app.api.Adapter<app.api.Entity> {
 }
 
 enum ItemType {
-  PhoenixKit = 165,
-  MedKit = 166,
-  ShieldBattery = 168,
-  EvoShield3 = 181
+  PhoenixKit = 161,
+  MedKit = 162,
+  ShieldBattery = 164,
+  EvoShield3 = 177
 }
