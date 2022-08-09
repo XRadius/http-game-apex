@@ -1,6 +1,8 @@
 import * as app from '..';
 
 export class EntityListFilter<T extends app.api.Adapter<app.api.Entity>> {
+  private nextTime = 0;
+  
   constructor(
     private readonly Constructor: new (address: bigint) => T,
     private readonly signifier: string,
@@ -9,36 +11,37 @@ export class EntityListFilter<T extends app.api.Adapter<app.api.Entity>> {
   get value() {
     return Object.values(this.values);
   }
-  
-  update(channel: app.api.Channel, entityList: app.EntityList, signifierList: app.SignifierList) {
-    const addresses = entityList.value
-      .filter(x => signifierList.get(x.signifierName.value).value === this.signifier)
-      .map(x => x.address);
-    this.handleCreates(channel, addresses
-      .filter(x => !this.values[x.toString(16)]));
-    this.handleDeletes(channel, Object.keys(this.values)
-      .map(x => BigInt(`0x${x}`))
-      .filter(x => !addresses.includes(x)));
-  }
 
-  private handleCreates(channel: app.api.Channel, values: Array<bigint>) {
-    for (const x of values) {
-      const key = x.toString(16);
-      if (!this.values[key]) {
-        const entity = new this.Constructor(x);
-        this.values[key] = entity;
-        channel.create(entity);
-      }
+  update(channel: app.api.Channel, entityList: app.EntityList, signifierList: app.SignifierList) {
+    if (!this.nextTime || this.nextTime < Date.now()) {
+      this.onUpdate(channel, entityList, signifierList);
+      this.nextTime = Date.now() + 1000;
     }
   }
 
-  private handleDeletes(channel: app.api.Channel, values: Array<bigint>) {
-    for (const x of values) {
-      const key = x.toString(16);
-      if (this.values[key]) {
-        channel.delete(this.values[key]);
-        delete this.values[key];
-      }
+  private checkCreate(address: bigint, channel: app.api.Channel, knownKeys: Record<string, boolean>) {
+    const key = String(address);
+    if (!this.values[key]) {
+      const value = new this.Constructor(address);
+      this.values[key] = value;
+      channel.create(value);
+      knownKeys[key] = true;
+    } else {
+      knownKeys[key] = true;
+    }
+  }
+
+  private onUpdate(channel: app.api.Channel, entityList: app.EntityList, signifierList: app.SignifierList) {
+    const knownKeys: Record<string, boolean> = {};
+    for (const entity of entityList.value) {
+      const signifier = signifierList.get(entity.signifierName.value);
+      if (signifier.value !== this.signifier) continue;
+      this.checkCreate(entity.address, channel, knownKeys);
+    }
+    for (const [k, v] of Object.entries(this.values)) {
+      if (knownKeys[k]) continue;
+      channel.delete(v);
+      delete this.values[k];
     }
   }
 }

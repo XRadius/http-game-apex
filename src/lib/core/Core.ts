@@ -10,7 +10,7 @@ export class Core {
   private constructor(
     private readonly address: bigint,
     private readonly channel: app.api.Channel,
-    private readonly entityList = new app.EntityList(address + app.coreOffsets.clEntityList, channel),
+    private readonly entityList = new app.EntityList(address + app.coreOffsets.clEntityList),
     private readonly signifierList = new app.SignifierList(channel)) {
     this.channel.create(this.entityList);
     this.channel.create(this.levelName);
@@ -32,6 +32,7 @@ export class Core {
   async runAsync(renderFrame: () => void) {
     const filterLists = [this.itemList, this.npcList, this.playerList];
     await this.channel.runAsync(() => {
+      this.entityList.update(this.channel);
       filterLists.forEach(x => x.update(this.channel, this.entityList, this.signifierList));
       renderFrame();
     });

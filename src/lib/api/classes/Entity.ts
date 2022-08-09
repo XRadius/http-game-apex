@@ -4,12 +4,12 @@ export class Entity {
   readonly address: bigint;
   readonly emitter = new EventTarget();
   readonly members: Record<string, app.EntityMember>;
-  readonly requestBatch: boolean;
+  readonly options?: IOptions;
 
-  constructor(address: bigint, members: Array<app.Adapter<app.EntityMember>>, requestBatch = false) {
+  constructor(address: bigint, members: Array<app.Adapter<app.EntityMember>>, options?: IOptions) {
     this.address = address;
     this.members = toRecord(members.map(x => x.source));
-    this.requestBatch = requestBatch;
+    this.options = options;
   }
 
   receive(value: app.BasicSync | app.EntityUpdateEntity) {
@@ -21,10 +21,12 @@ export class Entity {
   }
 
   update(id: number, syncId: number) {
-    const packets = Object.values(this.members)
-      .map(x => x.update(syncId))
-      .filter(Boolean)
-      .map(x => x!);
+    const packets: Array<app.EntityChangeMember> = [];
+    for (const member of Object.values(this.members)) {
+      const packet = member.update(syncId);
+      if (!packet) continue;
+      packets.push(packet);
+    }
     return packets.length
       ? new app.EntityChange(id, packets)
       : undefined;
@@ -45,4 +47,9 @@ function toRecord(members: Array<app.EntityMember>) {
   const result: Record<string, app.EntityMember> = {};
   for (const x of members) result[x.offset.toString(16)] ??= x;
   return result;
+}
+
+type IOptions = {
+  disableUpdate?: boolean;
+  requestBatch?: boolean;
 }

@@ -60,10 +60,12 @@ export class EntityProvider implements app.IPacketProvider {
     for (const [k, x] of Object.entries(this.createEntities)) {
       delete this.createEntities[k];
       const members = Object.values(x.members).map(x => new app.EntityCreateMember(x.offset, x.interval, x.buffer.byteLength));
-      new app.EntityCreate(Number(k), x.address, members, x.requestBatch).write(stream);
+      const requestBatch = Boolean(x.options && x.options.requestBatch);
+      new app.EntityCreate(Number(k), x.address, members, requestBatch).write(stream);
       this.aliveEntities[k] = x;
     }
     for (const [k, x] of Object.entries(this.aliveEntities)) {
+      if (x.options && x.options.disableUpdate) continue;
       x.update(Number(k), syncId)?.write(stream);
     }
   }

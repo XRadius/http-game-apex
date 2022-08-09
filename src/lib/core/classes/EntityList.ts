@@ -2,47 +2,48 @@ import * as app from '..';
 const maxEntities = 0x10000;
 
 export class EntityList extends app.api.Adapter<app.api.Entity> {
+  private nextTime = 0;
+  
   constructor(address: bigint,
-    private readonly channel: app.api.Channel,
-    private readonly entities: Record<string, app.Entity> = {},
-    private readonly pointers = Array(maxEntities).fill(0).map((_, i) => new app.UInt64(i << 5, 1000))) {
-    super(new app.api.Entity(address, pointers, true));
-    this.source.emitter.addEventListener('postReceive', this.onPostReceive.bind(this));
+    private readonly pointers = Array(maxEntities).fill(0).map((_, i) => new app.UInt64(i << 5, 1000)),
+    private readonly values: Record<string, app.Entity> = {}) {
+    super(new app.api.Entity(address, pointers, {disableUpdate: true, requestBatch: true}));
   }
 
   get value() {
-    return Object.values(this.entities);
+    return Object.values(this.values);
   }
 
-  private handleCreates(values: Array<bigint>) {
-    for (const x of values) {
-      const key = x.toString(16);
-      if (!this.entities[key]) {
-        const entity = new app.Entity(x);
-        this.entities[key] = entity;
-        this.channel.create(entity);
-      }
+  update(channel: app.api.Channel) {
+    if (!this.nextTime || this.nextTime < Date.now()) {
+      this.onUpdate(channel);
+      this.nextTime = Date.now() + 1000;
     }
   }
 
-  private handleDeletes(values: Array<bigint>) {
-    for (const x of values) {
-      const key = x.toString(16);
-      if (this.entities[key]) {
-        this.channel.delete(this.entities[key]);
-        delete this.entities[key];
-      }
+  private checkCreate(address: bigint, channel: app.api.Channel, knownKeys: Record<string, boolean>) {
+    const key = String(address);
+    if (!this.values[key]) {
+      const entity = new app.Entity(address);
+      this.values[key] = entity;
+      channel.create(entity);
+      knownKeys[key] = true;
+    } else {
+      knownKeys[key] = true;
     }
   }
 
-  private onPostReceive() {
-    const values = this.pointers
-      .map(x => x.value)
-      .filter(Boolean);
-    this.handleCreates(values
-      .filter(x => !this.entities[x.toString(16)]));
-    this.handleDeletes(Object.keys(this.entities)
-      .map(x => BigInt(`0x${x}`))
-      .filter(x => !values.includes(x)));
+  private onUpdate(channel: app.api.Channel) {
+    const knownKeys: Record<string, boolean> = {};
+    for (const pointer of this.pointers) {
+      const address = pointer.value;
+      if (!address) continue;
+      this.checkCreate(address, channel, knownKeys);
+    }
+    for (const [k, v] of Object.entries(this.values)) {
+      if (knownKeys[k]) continue;
+      channel.delete(v);
+      delete this.values[k];
+    }
   }
 }
