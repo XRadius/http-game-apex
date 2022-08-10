@@ -4,7 +4,7 @@ export class NPC extends app.api.Adapter<app.api.Entity> {
   constructor(
     readonly address: bigint,
     readonly localOrigin = new app.Vector(app.entityOffsets.localOrigin)) {
-    super(new app.api.Entity(address, [localOrigin]));
+    super(new app.api.Entity(address, [localOrigin], {enableUpdate: true}));
   }
   
   createColor() {

@@ -1,80 +1,87 @@
 import * as app from '..';
 
 export class EntityProvider implements app.IPacketProvider {
-  private readonly aliveEntities: Record<string, app.Entity>;
-  private readonly createEntities: Record<string, app.Entity>;
-  private readonly deleteEntities: Record<string, app.Entity>;
-  private readonly releasedIds: Array<string>;
+  private readonly createEntities = new Map<number, app.Entity>();
+  private readonly deleteEntities = new Map<number, app.Entity>();
+  private readonly livingEntities = new Map<number, app.Entity>();
+  private readonly lookupEntities = new Map<app.Entity, number>();
+  private readonly releasedIds: Array<number> = [];
   private nextId = 0;
 
-  constructor() {
-    this.aliveEntities = {};
-    this.createEntities = {};
-    this.deleteEntities = {};
-    this.releasedIds = [];
-  }
-
   create(entity: app.Entity) {
-    if (this.releasedIds.length) {
-      const id = this.releasedIds[0];
-      this.createEntities[id] = entity;
-      this.releasedIds.shift();
+    const id = this.releasedIds.pop();
+    if (typeof id !== 'undefined') {
+      this.createEntities.set(id, entity);
+      this.lookupEntities.set(entity, id);
     } else {
       const id = this.nextId;
-      this.createEntities[id] = entity;
+      this.createEntities.set(id, entity);
+      this.lookupEntities.set(entity, id);
       this.nextId++;
     }
   }
 
   delete(entity: app.Entity) {
-    const aliveEntry = Object
-      .entries(this.aliveEntities)
-      .find(([_, x]) => x === entity);
-    const createEntry = Object
-      .entries(this.createEntities)
-      .find(([_, x]) => x === entity);
-    if (createEntry) {
-      const [k] = createEntry;
-      delete this.createEntities[k];
-    } else if (aliveEntry) {
-      const [k, x] = aliveEntry;
-      this.deleteEntities[k] = x;
-      delete this.aliveEntities[k];
+    const id = this.lookupEntities.get(entity);
+    if (typeof id === 'undefined') {
+      throw new Error();
+    } else if (this.createEntities.has(id)) {
+      this.createEntities.delete(id);
+      this.lookupEntities.delete(entity);
+    } else if (this.livingEntities.has(id)) {
+      this.deleteEntities.set(id, entity);
+      this.livingEntities.delete(id);
+      this.lookupEntities.delete(entity);
     }
   }
 
-  receive(value: app.BasicSync | app.EntityUpdate) {
-    if (value instanceof app.EntityUpdate) {
-      this.handleUpdate(value);
+  receive(packet: app.BasicSync | app.EntityUpdate) {
+    if (packet instanceof app.EntityUpdate) {
+      this.receiveUpdate(packet);
     } else {
-      this.handleSync(value);
+      this.receiveSync(packet);
     }
   }
 
   update(stream: app.BinaryWriter, syncId: number) {
-    for (const k of Object.keys(this.deleteEntities)) {
-      delete this.deleteEntities[k];
-      new app.EntityDelete(Number(k)).write(stream);
-      this.releasedIds.push(k);
+    for (const id of this.deleteEntities.keys()) {
+      const packet = new app.EntityDelete(id);
+      this.deleteEntities.delete(id);
+      this.releasedIds.push(id);
+      packet.write(stream);
     }
-    for (const [k, x] of Object.entries(this.createEntities)) {
-      delete this.createEntities[k];
-      const members = Object.values(x.members).map(x => new app.EntityCreateMember(x.offset, x.interval, x.buffer.byteLength));
-      const requestBatch = Boolean(x.options && x.options.requestBatch);
-      new app.EntityCreate(Number(k), x.address, members, requestBatch).write(stream);
-      this.aliveEntities[k] = x;
+    for (const [id, entity] of this.createEntities) {
+      const packet = new app.EntityCreate(id, entity.address, convertMembers(entity.members), Boolean(entity.options?.requestBatch));
+      this.createEntities.delete(id);
+      this.livingEntities.set(id, entity);
+      packet.write(stream);
     }
-    for (const [k, x] of Object.entries(this.aliveEntities)) {
-      if (x.options && x.options.disableUpdate) continue;
-      x.update(Number(k), syncId)?.write(stream);
+    for (const [id, entity] of this.livingEntities) {
+      if (!entity.options || !entity.options.enableUpdate) continue;
+      const packet = entity.update(id, syncId);
+      if (!packet) continue;
+      packet.write(stream);
     }
   }
 
-  private handleUpdate(update: app.EntityUpdate) {
-    update.entities.forEach(x => this.aliveEntities[x.id]?.receive(x));
+  private receiveUpdate(packet: app.EntityUpdate) {
+    for (const child of packet.entities) {
+      const entity = this.livingEntities.get(child.id);
+      if (!entity) continue;
+      entity.receive(child);
+    }
   }
 
-  private handleSync(sync: app.BasicSync) {
-    Object.values(this.aliveEntities).forEach(x => x.receive(sync));
+  private receiveSync(packet: app.BasicSync) {
+    for (const entity of this.livingEntities.values()) {
+      if (!entity.options || !entity.options.enableUpdate) continue;
+      entity.receive(packet);
+    }
   }
+}
+
+function convertMembers(members: Map<number, app.EntityMember>) {
+  const result: Array<app.EntityCreateMember> = [];
+  for (const [id, member] of members) result.push(new app.EntityCreateMember(id, member.interval, member.buffer.byteLength));
+  return result;
 }

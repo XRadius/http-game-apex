@@ -16,7 +16,7 @@ ui(x => renderAsync(x).finally(() => {
 
 async function renderAsync(core: app.core.Core) {
   await core.runAsync(() => {
-    const localPlayer = core.playerList.value.find(x => x.address === core.localPlayer.value);
+    const localPlayer = core.playerList.get(core.localPlayer.value);
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
     renderFrame(core, localPlayer),
@@ -27,12 +27,12 @@ async function renderAsync(core: app.core.Core) {
 function renderFrame(core: app.core.Core, localPlayer?: app.core.Player) {
   map.refresh(core.levelName.value);
   if (!localPlayer) return;
-  map.renderPlayers(localPlayer, core.playerList.value);
+  map.renderPlayers(localPlayer, core.playerList.values());
 }
 
 function updateSense(core: app.core.Core, localPlayer?: app.core.Player) {
   if (!localPlayer || !location.hash.includes('enable-sense')) return;
   const sense = new app.features.Sense();
-  sense.updateItems(localPlayer, core.itemList.value);
-  sense.updatePlayers(localPlayer, core.playerList.value);
+  sense.updateItems(localPlayer, core.itemList.values());
+  sense.updatePlayers(localPlayer, core.playerList.values());
 }

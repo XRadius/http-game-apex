@@ -4,14 +4,14 @@ export class Sense {
   constructor(
     private readonly maximumDistance = 200) {}
 
-  updateItems(localPlayer: app.core.Player, items: Array<app.core.Item>) {
+  updateItems(localPlayer: app.core.Player, items: Iterable<app.core.Item>) {
     for (const item of items) {
       if (!item.hasColor || !this.inRange(localPlayer, item.localOrigin)) continue;
       item.highlightFunctionBits.value = 0x5C408A89;
     }
   }
   
-  updatePlayers(localPlayer: app.core.Player, players: Array<app.core.Player>) {
+  updatePlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
     for (const player of players) {
       if (player.isSameTeam(localPlayer) || !this.inRange(localPlayer, player.localOrigin)) continue;
       player.glowEnable.value = 7;

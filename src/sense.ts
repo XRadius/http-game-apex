@@ -11,7 +11,7 @@ ui((x) => {
 
 async function renderAsync(core: app.core.Core) {
   await core.runAsync(() => {
-    const localPlayer = core.playerList.value.find(x => x.address === core.localPlayer.value);
+    const localPlayer = core.playerList.get(core.localPlayer.value);
     updateSense(core, localPlayer);
   });
 }
@@ -19,6 +19,6 @@ async function renderAsync(core: app.core.Core) {
 function updateSense(core: app.core.Core, localPlayer?: app.core.Player) {
   if (!localPlayer) return;
   const sense = new app.features.Sense();
-  sense.updateItems(localPlayer, core.itemList.value);
-  sense.updatePlayers(localPlayer, core.playerList.value);
+  sense.updateItems(localPlayer, core.itemList.values());
+  sense.updatePlayers(localPlayer, core.playerList.values());
 }

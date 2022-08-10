@@ -9,7 +9,7 @@ export class Server {
 
   async versionAsync() {
     const response = await fetch('/api/version');
-    const value = await response.json().catch(() => 0) as Number;
-    return value;
+    const result = await response.json().catch(() => 0) as Number;
+    return result;
   }
 }

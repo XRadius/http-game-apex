@@ -3,16 +3,16 @@ import * as app from '..';
 export class SignifierList {
   constructor(
     private readonly channel: app.api.Channel,
-    private readonly signifiers: Record<string, app.Signifier> = {}) {}
+    private readonly signifiers: Map<bigint, app.Signifier> = new Map()) {}
 
   get(address: bigint) {
-    const key = address.toString(16);
-    if (this.signifiers[key]) {
-      return this.signifiers[key];
-    } else {
-      this.signifiers[key] = new app.Signifier(address);
-      this.channel.create(this.signifiers[key]);
-      return this.signifiers[key];
-    }
+    return this.signifiers.get(address) ?? this.create(address);
+  }
+
+  private create(address: bigint) {
+    const signifier = new app.Signifier(address);
+    this.signifiers.set(address, signifier);
+    this.channel.create(signifier);
+    return signifier;
   }
 }

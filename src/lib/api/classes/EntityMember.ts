@@ -13,11 +13,11 @@ export class EntityMember {
     this.offset = offset;
   }
 
-  receive(value: app.BasicSync | app.EntityUpdateEntityMember) {
-    if (value instanceof app.EntityUpdateEntityMember) {
-      this.handleUpdate(value);
+  receive(packet: app.BasicSync | app.EntityUpdateEntityMember) {
+    if (packet instanceof app.EntityUpdateEntityMember) {
+      this.receiveUpdate(packet);
     } else {
-      this.handleSync(value);
+      this.receiveSync(packet);
     }
   }
 
@@ -28,17 +28,14 @@ export class EntityMember {
     return new app.EntityChangeMember(this.offset, this.buffer);
   }
 
-  private handleUpdate(update: app.EntityUpdateEntityMember) {
-    if (!this.syncId && update.buffer.byteLength === this.buffer.byteLength) {
-      for (let i = 0; i < update.buffer.byteLength; i++) {
-        this.buffer.setInt8(i, update.buffer.getInt8(i));
-      }
-    }
+  private receiveUpdate(packet: app.EntityUpdateEntityMember) {
+    if (typeof this.syncId !== 'undefined') return;
+    if (packet.buffer.byteLength !== this.buffer.byteLength) return;
+    for (let i = 0; i < packet.buffer.byteLength; i++) this.buffer.setInt8(i, packet.buffer.getInt8(i));
   }
 
-  private handleSync(sync: app.BasicSync) {
-    if (this.syncId === sync.id) {
-      delete this.syncId;
-    }
+  private receiveSync(packet: app.BasicSync) {
+    if (this.syncId !== packet.id) return;
+    this.syncId = undefined;
   }
 }

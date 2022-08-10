@@ -10,7 +10,7 @@ export class Player extends app.api.Adapter<app.api.Entity> {
     readonly lifeState = new app.UInt8(app.playerOffsets.lifeState),
     readonly viewAngles = new app.Vector(app.playerOffsets.viewAngles),
     readonly bleedoutState = new app.UInt8(app.playerOffsets.bleedoutState)) {
-    super(new app.api.Entity(address, [localOrigin, glowEnable, glowThroughWalls, teamNum, lifeState, viewAngles, bleedoutState]));
+    super(new app.api.Entity(address, [localOrigin, glowEnable, glowThroughWalls, teamNum, lifeState, viewAngles, bleedoutState], {enableUpdate: true}));
   }
   
   createColor(otherPlayer: app.Player) {

@@ -41,7 +41,7 @@ export class Channel {
 
   private receive(ev: MessageEvent) {
     if (ev.data instanceof ArrayBuffer) {
-      const stream = new app.BinaryReader(new DataView(ev.data));
+      const stream = new app.BinaryReader(ev.data);
       while (stream.hasBytes()) {
         switch (stream.readUInt8() as app.PacketType) {
           case app.PacketType.BasicSync:

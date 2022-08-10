@@ -2,8 +2,8 @@ export class BinaryReader {
   private readonly buffer: DataView;
   private offset: number;
 
-  constructor(buffer: DataView) {
-    this.buffer = buffer;
+  constructor(buffer: ArrayBuffer) {
+    this.buffer = new DataView(buffer);
     this.offset = 0;
   }
 
@@ -12,9 +12,9 @@ export class BinaryReader {
   }
 
   readBytes(size: number) {
-    const buffer = new DataView(new ArrayBuffer(size));
-    for (let i = 0; i < size; i++) buffer.setUint8(i, this.readUInt8());
-    return buffer;
+    const result = new DataView(this.buffer.buffer, this.offset, size);
+    this.offset += size;
+    return result;
   }
   
   readUInt8() {

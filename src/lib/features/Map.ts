@@ -23,7 +23,7 @@ export class Map {
     this.renderBackground();
   }
 
-  renderPlayers(localPlayer: app.core.Player, players: Array<app.core.Player>) {
+  renderPlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
     if (!this.map) return;
     for (const player of players) {
       const x = this.shiftX + (1 / this.image.width * this.scaleX) * (player.localOrigin.value.x - this.map.x) / this.ratioX;

@@ -2,16 +2,16 @@ import * as app from '..';
 const maxEntities = 0x10000;
 
 export class EntityList extends app.api.Adapter<app.api.Entity> {
+  private readonly entities = new Map<bigint, app.Entity>();
   private nextTime = 0;
   
   constructor(address: bigint,
-    private readonly pointers = Array(maxEntities).fill(0).map((_, i) => new app.UInt64(i << 5, 1000)),
-    private readonly values: Record<string, app.Entity> = {}) {
-    super(new app.api.Entity(address, pointers, {disableUpdate: true, requestBatch: true}));
+    private readonly pointers = Array(maxEntities).fill(0).map((_, i) => new app.UInt64(i << 5, 1000))) {
+    super(new app.api.Entity(address, pointers, {requestBatch: true}));
   }
 
-  get value() {
-    return Object.values(this.values);
+  get map(): ReadonlyMap<bigint, app.Entity> {
+    return this.entities;
   }
 
   update(channel: app.api.Channel) {
@@ -21,29 +21,28 @@ export class EntityList extends app.api.Adapter<app.api.Entity> {
     }
   }
 
-  private checkCreate(address: bigint, channel: app.api.Channel, knownKeys: Record<string, boolean>) {
-    const key = String(address);
-    if (!this.values[key]) {
+  private checkCreate(address: bigint, channel: app.api.Channel, knownSet: Set<bigint>) {
+    if (!this.entities.has(address)) {
       const entity = new app.Entity(address);
-      this.values[key] = entity;
+      this.entities.set(address, entity);
       channel.create(entity);
-      knownKeys[key] = true;
+      knownSet.add(address);
     } else {
-      knownKeys[key] = true;
+      knownSet.add(address);
     }
   }
 
   private onUpdate(channel: app.api.Channel) {
-    const knownKeys: Record<string, boolean> = {};
+    const knownSet: Set<bigint> = new Set();
     for (const pointer of this.pointers) {
       const address = pointer.value;
       if (!address) continue;
-      this.checkCreate(address, channel, knownKeys);
+      this.checkCreate(address, channel, knownSet);
     }
-    for (const [k, v] of Object.entries(this.values)) {
-      if (knownKeys[k]) continue;
+    for (const [k, v] of this.entities) {
+      if (knownSet.has(k)) continue;
+      this.entities.delete(k);
       channel.delete(v);
-      delete this.values[k];
     }
   }
 }

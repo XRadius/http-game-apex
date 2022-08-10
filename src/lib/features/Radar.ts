@@ -20,7 +20,7 @@ export class Radar {
     this.renderRings();
   }
 
-  renderItems(localPlayer: app.core.Player, items: Array<app.core.Item>) {
+  renderItems(localPlayer: app.core.Player, items: Iterable<app.core.Item>) {
     for (const item of items) {
       if (!item.hasColor) continue;
       const position = this.calculatePosition(localPlayer, item.localOrigin);
@@ -33,7 +33,7 @@ export class Radar {
     }
   }
   
-  renderNpcs(localPlayer: app.core.Player, npcs: Array<app.core.NPC>) {
+  renderNpcs(localPlayer: app.core.Player, npcs: Iterable<app.core.NPC>) {
     for (const npc of npcs) {
       const position = this.calculatePosition(localPlayer, npc.localOrigin);
       if (position) {
@@ -45,7 +45,7 @@ export class Radar {
     }
   }
 
-  renderPlayers(localPlayer: app.core.Player, players: Array<app.core.Player>) {
+  renderPlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
     for (const player of players) {
       if (player === localPlayer) continue;
       const position = this.calculatePosition(localPlayer, player.localOrigin);
