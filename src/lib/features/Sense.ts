@@ -13,7 +13,7 @@ export class Sense {
   
   updatePlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
     for (const player of players) {
-      if (player.isSameTeam(localPlayer) || !this.inRange(localPlayer, player.localOrigin)) continue;
+      if (!player.isValid || player.isSameTeam(localPlayer) || !this.inRange(localPlayer, player.localOrigin)) continue;
       player.glowEnable.value = 7;
       player.glowThroughWalls.value = 2;
     }

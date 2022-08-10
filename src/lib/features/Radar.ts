@@ -47,7 +47,7 @@ export class Radar {
 
   renderPlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
     for (const player of players) {
-      if (player === localPlayer) continue;
+      if (!player.isValid || player === localPlayer) continue;
       const position = this.calculatePosition(localPlayer, player.localOrigin);
       if (position) {
         this.context.beginPath();

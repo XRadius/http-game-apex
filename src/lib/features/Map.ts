@@ -26,6 +26,7 @@ export class Map {
   renderPlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
     if (!this.map) return;
     for (const player of players) {
+      if (!player.isValid) continue;
       const x = this.shiftX + (1 / this.image.width * this.scaleX) * (player.localOrigin.value.x - this.map.x) / this.ratioX;
       const y = this.shiftY + (1 / this.image.height * this.scaleY) * (player.localOrigin.value.y - this.map.y) / -this.ratioY;
       this.context.beginPath();
