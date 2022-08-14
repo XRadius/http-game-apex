@@ -1,3 +1,4 @@
+export const VERSION = 5;
 export * from './abstracts/enums/PacketType';
 export * from './abstracts/interfaces/IPacketProvider';
 export * from './abstracts/interfaces/IPacketWriter';

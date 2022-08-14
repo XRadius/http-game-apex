@@ -2,9 +2,13 @@
   "include": ["src"],
   "compilerOptions": {
     "alwaysStrict": true,
+    "baseUrl": "src",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSourceMap": true,
     "inlineSources": true,
+    "jsx": "react",
     "lib": ["DOM", "ES2021"],
     "module": "CommonJS",
     "noImplicitAny": true,

@@ -18,38 +18,60 @@ export class Map {
   }
 
   refresh(levelName: string) {
-    this.fetch(levelName);
+    this.prepare(levelName);
     this.update();
     this.renderBackground();
   }
 
+  renderItems(items: Iterable<app.core.Item>) {
+    for (const item of items) {
+      if (!item.hasColor) continue;
+      const position = this.calculatePosition(item.localOrigin);
+      if (position) {
+        this.context.beginPath();
+        this.context.arc(position.x, position.y, this.scaleR * 4, 0, Math.PI * 2);
+        this.context.fillStyle = item.createColor() ?? '#FFF';
+        this.context.fill();
+      }
+    }
+  }
+  
   renderPlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
-    if (!this.map) return;
     for (const player of players) {
       if (!player.isValid) continue;
-      const x = this.shiftX + (1 / this.image.width * this.scaleX) * (player.localOrigin.value.x - this.map.x) / this.ratioX;
-      const y = this.shiftY + (1 / this.image.height * this.scaleY) * (player.localOrigin.value.y - this.map.y) / -this.ratioY;
-      this.context.beginPath();
-      this.context.arc(x, y, this.scaleR * 8, 0, Math.PI * 2);
-      this.context.fillStyle = player.createColor(localPlayer);
-      this.context.fill();
+      const position = this.calculatePosition(player.localOrigin);
+      if (position) {
+        this.context.beginPath();
+        this.context.arc(position.x, position.y, this.scaleR * 8, 0, Math.PI * 2);
+        this.context.fillStyle = player.createColor(localPlayer);
+        this.context.fill();
+      }
     }
   }
 
-  private fetch(levelName: string) {
+  private calculatePosition(localOrigin: app.core.Vector) {
+    if (this.map) {
+      const x = this.shiftX + (1 / this.image.width * this.scaleX) * (localOrigin.value.x - this.map.x) / this.ratioX;
+      const y = this.shiftY + (1 / this.image.height * this.scaleY) * (localOrigin.value.y - this.map.y) / -this.ratioY;
+      return {x, y};
+    } else {
+      return;
+    }
+  }
+
+  private prepare(levelName: string) {
     this.map = getDataByLevelName(levelName);
     this.image.src = this.map ? `images/maps/${levelName}.webp` : 'images/maps.webp';
   }
 
   private renderBackground() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.drawImage(this.image, 0,0, this.image.width, this.image.height, this.shiftX, this.shiftY, this.scaleX, this.scaleY);
+    this.context.drawImage(this.image, 0, 0, this.image.width, this.image.height, this.shiftX, this.shiftY, this.scaleX, this.scaleY);
   }
 
   private update() {
-    if (!this.map) return;
-    this.ratioX = (this.map.y - this.map.x) / this.image.width;
-    this.ratioY = (this.map.y - this.map.x) / this.image.height;
+    this.ratioX = this.map ? (this.map.y - this.map.x) / this.image.width : 0;
+    this.ratioY = this.map ? (this.map.y - this.map.x) / this.image.height : 0;
     this.scaleR = Math.min(this.canvas.width / this.image.width, this.canvas.height / this.image.height);
     this.scaleX = this.image.width * this.scaleR;
     this.scaleY = this.image.height * this.scaleR;
