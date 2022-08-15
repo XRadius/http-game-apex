@@ -7,7 +7,7 @@ export class Player extends app.api.Adapter<app.api.Entity> {
     readonly glowEnable = new app.UInt8(app.playerOffsets.glowEnable),
     readonly glowThroughWalls = new app.UInt8(app.playerOffsets.glowThroughWall),
     readonly teamNum = new app.UInt8(app.playerOffsets.iTeamNum, 1000),
-    readonly name = new app.UInt64(app.playerOffsets.iName, 1000),
+    readonly name = new app.UInt64(app.playerOffsets.iName),
     readonly lifeState = new app.UInt8(app.playerOffsets.lifeState),
     readonly viewAngles = new app.Vector(app.playerOffsets.viewAngles),
     readonly bleedoutState = new app.UInt8(app.playerOffsets.bleedoutState)) {
