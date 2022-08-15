@@ -2,20 +2,52 @@ import * as app from '..';
 
 export class Sense {
   constructor(
+    private readonly itemDefault = new app.core.GlowData(0, 110, 225, 25, true, false),
+    private readonly itemHighlight = new app.core.GlowData(137, 108, 64, 0, true, false),
     private readonly maximumDistance = 200) {}
+
+  resetItems(_: app.core.Player, items: Iterable<app.core.Item>) {
+    for (const item of items) {
+      if (item.highlightFunctionBits.value.isSame(this.itemHighlight)) {
+        item.highlightFunctionBits.value = this.itemDefault;
+      }
+    }
+  }
+
+  resetPlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
+    for (const player of players) {
+      if (player.isValid && !player.isSameTeam(localPlayer)) {
+        if (this.inRange(localPlayer, player.localOrigin)) {
+          /* This could be a Bloodhound scan! */
+        } else if (player.glowEnable.value === 7) {
+          player.glowEnable.value = 1;
+          player.glowThroughWalls.value = 5;
+        }
+      }
+    }
+  }
 
   updateItems(localPlayer: app.core.Player, items: Iterable<app.core.Item>) {
     for (const item of items) {
-      if (!item.hasColor || !this.inRange(localPlayer, item.localOrigin)) continue;
-      item.highlightFunctionBits.value = 0x5C408A89;
+      if (item.hasColor && this.inRange(localPlayer, item.localOrigin)) {
+        item.highlightFunctionBits.value = this.itemHighlight;
+      } else if (item.highlightFunctionBits.value.isSame(this.itemHighlight)) {
+        item.highlightFunctionBits.value = this.itemDefault;
+      }
     }
   }
   
   updatePlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>) {
     for (const player of players) {
-      if (!player.isValid || player.isSameTeam(localPlayer) || !this.inRange(localPlayer, player.localOrigin)) continue;
-      player.glowEnable.value = 7;
-      player.glowThroughWalls.value = 2;
+      if (player.isValid && !player.isSameTeam(localPlayer)) {
+        if (this.inRange(localPlayer, player.localOrigin)) {
+          player.glowEnable.value = 7;
+          player.glowThroughWalls.value = 2;
+        } else if (player.glowEnable.value === 7) {
+          player.glowEnable.value = 1;
+          player.glowThroughWalls.value = 5;
+        }
+      }
     }
   }
 

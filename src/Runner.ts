@@ -60,9 +60,15 @@ export class Runner {
   }
   
   private updateSense(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
-    if (vm.settings.sense.highlightItems.checked && localPlayer)
-      this.sense.updateItems(localPlayer, core.itemList.values());
-    if (vm.settings.sense.highlightPlayers.checked && localPlayer)
-      this.sense.updatePlayers(localPlayer, core.playerList.values());
+    const itemsFn = vm.settings.sense.highlightItems.checked
+      ? this.sense.updateItems.bind(this.sense)
+      : this.sense.resetItems.bind(this.sense);
+    const playersFn = vm.settings.sense.highlightPlayers.checked
+      ? this.sense.updatePlayers.bind(this.sense)
+      : this.sense.resetPlayers.bind(this.sense);
+    if (localPlayer) {
+      itemsFn(localPlayer, core.itemList.values());
+      playersFn(localPlayer, core.playerList.values());
+    }
   }
 }
