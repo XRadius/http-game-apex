@@ -20,14 +20,14 @@ export class Radar {
     this.renderRings();
   }
 
-  renderItems(localPlayer: app.core.Player, items: Iterable<app.core.Item>) {
+  renderItems(localPlayer: app.core.Player, items: Iterable<app.core.Item>, itemSet: Set<number>) {
     for (const item of items) {
-      if (!item.hasColor) continue;
+      if (!itemSet.has(item.customScriptInt.value)) continue;
       const position = this.calculatePosition(localPlayer, item.localOrigin);
       if (position) {
         this.context.beginPath();
         this.context.arc(position.x, position.y, this.outerRadius / 80, 0, Math.PI * 2);
-        this.context.fillStyle = item.createColor() ?? '#FFF';
+        this.context.fillStyle = '#FFF';
         this.context.fill();
       }
     }

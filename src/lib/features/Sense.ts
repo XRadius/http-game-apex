@@ -27,9 +27,9 @@ export class Sense {
     }
   }
 
-  updateItems(localPlayer: app.core.Player, items: Iterable<app.core.Item>) {
+  updateItems(localPlayer: app.core.Player, items: Iterable<app.core.Item>, itemSet: Set<number>) {
     for (const item of items) {
-      if (item.hasColor && this.inRange(localPlayer, item.localOrigin)) {
+      if (itemSet.has(item.customScriptInt.value) && this.inRange(localPlayer, item.localOrigin)) {
         item.highlightFunctionBits.value = this.itemHighlight;
       } else if (item.highlightFunctionBits.value.isSame(this.itemHighlight)) {
         item.highlightFunctionBits.value = this.itemDefault;

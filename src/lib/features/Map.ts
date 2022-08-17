@@ -23,14 +23,14 @@ export class Map {
     this.renderBackground();
   }
 
-  renderItems(items: Iterable<app.core.Item>) {
+  renderItems(items: Iterable<app.core.Item>, itemSet: Set<number>) {
     for (const item of items) {
-      if (!item.hasColor) continue;
+      if (!itemSet.has(item.customScriptInt.value)) continue;
       const position = this.calculatePosition(item.localOrigin);
       if (position) {
         this.context.beginPath();
         this.context.arc(position.x, position.y, this.scaleR * 4, 0, Math.PI * 2);
-        this.context.fillStyle = item.createColor() ?? '#FFF';
+        this.context.fillStyle = '#FFF';
         this.context.fill();
       }
     }

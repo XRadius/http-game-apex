@@ -31,12 +31,12 @@ export class Runner {
   }
 
   private update(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
-    switch (vm.settings.viewType.value) {
-      case ui.areas.settings.MainType.Map:
+    switch (vm.settings.general.viewType.value) {
+      case ui.settings.general.MainType.Map:
         this.map.refresh(core.levelName.value);
         this.updateMap(core, vm, localPlayer);
         break;
-      case ui.areas.settings.MainType.Radar:
+      case ui.settings.general.MainType.Radar:
         this.radar.refresh();
         this.updateRadar(core, vm, localPlayer);
         break;
@@ -44,30 +44,30 @@ export class Runner {
   }
   
   private updateMap(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
-    if (vm.settings.map.showItems.checked)
-      this.map.renderItems(core.itemList.values());
-    if (vm.settings.map.showPlayers.checked && localPlayer)
+    if (vm.settings.general.map.showItems.checked)
+      this.map.renderItems(core.itemList.values(), vm.settings.itemSet);
+    if (vm.settings.general.map.showPlayers.checked && localPlayer)
       this.map.renderPlayers(localPlayer, core.playerList.values());
   }
   
   private updateRadar(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
-    if (vm.settings.radar.showItems.checked && localPlayer)
-      this.radar.renderItems(localPlayer, core.itemList.values());
-    if (vm.settings.radar.showPlayers.checked && localPlayer)
+    if (vm.settings.general.radar.showItems.checked && localPlayer)
+      this.radar.renderItems(localPlayer, core.itemList.values(), vm.settings.itemSet);
+    if (vm.settings.general.radar.showPlayers.checked && localPlayer)
       this.radar.renderNpcs(localPlayer, core.npcList.values());
-    if (vm.settings.radar.showPlayers.checked && localPlayer)
+    if (vm.settings.general.radar.showPlayers.checked && localPlayer)
       this.radar.renderPlayers(localPlayer, core.playerList.values());
   }
   
   private updateSense(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
-    const itemsFn = vm.settings.sense.highlightItems.checked
+    const itemsFn = vm.settings.general.sense.highlightItems.checked
       ? this.sense.updateItems.bind(this.sense)
       : this.sense.resetItems.bind(this.sense);
-    const playersFn = vm.settings.sense.highlightPlayers.checked
+    const playersFn = vm.settings.general.sense.highlightPlayers.checked
       ? this.sense.updatePlayers.bind(this.sense)
       : this.sense.resetPlayers.bind(this.sense);
     if (localPlayer) {
-      itemsFn(localPlayer, core.itemList.values());
+      itemsFn(localPlayer, core.itemList.values(), vm.settings.itemSet);
       playersFn(localPlayer, core.playerList.values());
     }
   }

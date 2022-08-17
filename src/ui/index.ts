@@ -1,11 +1,8 @@
-export * as material from '@mui/material';
-export * from './language';
-export * from './theme';
 export * from './utilities';
-export * as areas from './areas';
-export * from './classes/LocalStorage';
-export * from './views/MainView';
-export * from './views/MainViewModel';
-export * from './views/StatusView';
-export * from './views/StatusViewModel';
-export * from './views/SwitchView';
+export * as material from '@mui/material';
+export * as main from './main';
+export * as settings from './settings';
+export * from './language';
+export * from './LocalStorage';
+export * from './MainViewModel';
+export * from './MainView';
