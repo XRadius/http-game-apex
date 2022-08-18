@@ -1,5 +1,6 @@
 export {api} from '..';
 export * from './helpers';
+export * from './classes/ButtonList';
 export * from './classes/Entity';
 export * from './classes/EntityList';
 export * from './classes/EntityListFilter';
@@ -12,6 +13,7 @@ export * from './entities/NPC';
 export * from './entities/Player';
 export * from './models/GlowData';
 export * from './models/VectorData';
+export * from './offsets/buttonOffsets';
 export * from './offsets/coreOffsets';
 export * from './offsets/entityOffsets';
 export * from './offsets/itemOffsets';

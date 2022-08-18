@@ -9,9 +9,10 @@ export class Player extends app.api.Adapter<app.api.Entity> {
     readonly teamNum = new app.UInt8(app.playerOffsets.iTeamNum, 1000),
     readonly name = new app.UInt64(app.playerOffsets.iName),
     readonly lifeState = new app.UInt8(app.playerOffsets.lifeState),
+    readonly vecPunchWeaponAngle = new app.Vector(app.playerOffsets.vecPunchWeaponAngle),
     readonly viewAngles = new app.Vector(app.playerOffsets.viewAngles),
     readonly bleedoutState = new app.UInt8(app.playerOffsets.bleedoutState)) {
-    super(new app.api.Entity(address, [localOrigin, glowEnable, glowThroughWalls, teamNum, name, lifeState, viewAngles, bleedoutState], {enableUpdate: true}));
+    super(new app.api.Entity(address, [localOrigin, glowEnable, glowThroughWalls, teamNum, name, lifeState, vecPunchWeaponAngle, viewAngles, bleedoutState], {enableUpdate: true}));
   }
   
   get isValid() {

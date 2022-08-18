@@ -6,6 +6,7 @@ export class Runner {
     private readonly canvas = document.getElementById('canvas') as HTMLCanvasElement,
     private readonly map = new app.features.Map(canvas),
     private readonly radar = new app.features.Radar(canvas),
+    private readonly recoil = new app.features.Recoil(),
     private readonly sense = new app.features.Sense()) {}
   
   static create() {
@@ -16,6 +17,7 @@ export class Runner {
 
   run(core: app.core.Core, vm: ui.MainViewModel) {
     const localPlayer = core.playerList.get(core.localPlayer.value);
+    this.updateRecoil(core, vm, localPlayer);
     this.updateSense(core, vm, localPlayer);
     this.canvas.height = window.innerHeight;
     this.canvas.width = window.innerWidth;
@@ -59,6 +61,11 @@ export class Runner {
       this.radar.renderPlayers(localPlayer, core.playerList.values());
   }
   
+  private updateRecoil(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
+    if (vm.settings.research.recoil.enable.value && localPlayer)
+      this.recoil.update(core.buttonList, localPlayer, vm.settings.research.recoil.timer.value);
+  }
+
   private updateSense(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
     const itemsFn = vm.settings.general.sense.highlightItems.value
       ? this.sense.updateItems.bind(this.sense)

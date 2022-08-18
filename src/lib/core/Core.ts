@@ -1,6 +1,7 @@
 import * as app from '.';
 
 export class Core {
+  readonly buttonList = new app.ButtonList(this.address);
   readonly levelName = new app.LevelName(this.address + app.coreOffsets.levelName);
   readonly localPlayer = new app.LocalPlayer(this.address + app.coreOffsets.localPlayer);
   readonly itemList = this.itemFilter.map;
@@ -15,6 +16,7 @@ export class Core {
     private readonly npcFilter = new app.EntityListFilter(app.NPC, 'npc_dummie'),
     private readonly playerFilter = new app.EntityListFilter(app.Player, 'player'),
     private readonly signifierList = new app.SignifierList(channel)) {
+    this.channel.create(this.buttonList);
     this.channel.create(this.entityList);
     this.channel.create(this.levelName);
     this.channel.create(this.localPlayer);
