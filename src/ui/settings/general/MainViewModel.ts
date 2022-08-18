@@ -5,5 +5,5 @@ export class MainViewModel {
   readonly map = new app.MapViewModel();
   readonly radar = new app.RadarViewModel();
   readonly sense = new app.SenseViewModel();
-  readonly viewType = new ui.LocalStorage<app.MainType>('settings.viewType', app.MainType.Radar);
+  readonly viewType = new ui.StringStorage<app.MainType>('settings.viewType', app.MainType.Radar);
 }

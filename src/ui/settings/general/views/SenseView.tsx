@@ -11,11 +11,11 @@ export const SenseView = ui.createView<{vm: app.SenseViewModel}>(({vm}) => (
       label={app.language.generalSenseItems}
       control={<ui.material.Switch
         onChange={x => vm.highlightItems.change(x.target.checked)}
-        checked={vm.highlightItems.checked} />} />
+        checked={vm.highlightItems.value} />} />
     <ui.material.FormControlLabel
       label={app.language.generalSensePlayers}
       control={<ui.material.Switch
         onChange={x => vm.highlightPlayers.change(x.target.checked)}
-        checked={vm.highlightPlayers.checked} />} />
+        checked={vm.highlightPlayers.value} />} />
   </ui.material.FormGroup>
 ));

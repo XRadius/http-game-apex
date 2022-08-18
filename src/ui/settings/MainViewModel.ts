@@ -4,6 +4,7 @@ import * as mobx from 'mobx';
 export class MainViewModel {
   readonly general = new app.general.MainViewModel();
   readonly items = new app.items.MainViewModel();
+  readonly research = new app.research.MainViewModel();
 
   constructor() {
     mobx.makeObservable(this);

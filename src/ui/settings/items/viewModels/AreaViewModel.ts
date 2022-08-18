@@ -12,7 +12,7 @@ export class AreaViewModel {
 
   toItemSet(value: Set<number>) {
     for (const entry of this.items) {
-      if (!entry.store.checked) continue;
+      if (!entry.store.value) continue;
       value.add(entry.value.itemId);
     }
   }

@@ -31,7 +31,7 @@ const styles = {
   container: {
     height: '100vh',
     overflowX: 'hidden',
-    overflowY: 'auto',
+    overflowY: 'scroll',
     userSelect: 'none'
   },
   error: {

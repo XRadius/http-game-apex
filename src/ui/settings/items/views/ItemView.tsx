@@ -8,7 +8,7 @@ export const ItemView = ui.createView<{vm: app.ItemViewModel}>(({vm}) => (
       label={vm.value.name}
       control={<ui.material.Switch
         onChange={y => vm.store.change(y.target.checked)}
-        checked={vm.store.checked} />} />
+        checked={vm.store.value} />} />
   </ui.material.FormGroup>
 ));
 
