@@ -23,14 +23,26 @@ const theme = ui.material.createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        html: {
+          backgroundColor: '#333'
+        },
         body: {
           backgroundColor: '#333',
-          overflowY: 'scroll',
-          userSelect: 'none'
         },
         canvas: {
           display: 'none', 
           position: 'fixed'
+        },
+        '::-webkit-scrollbar': {
+          width: '12px'
+        },
+        '::-webkit-scrollbar-track': {
+          backgroundColor: '#333'
+        },
+        '::-webkit-scrollbar-thumb': {
+          backgroundColor: '#4CAF50',
+          border: '4px solid #333',
+          borderRadius: '12px'
         }
       }
     }

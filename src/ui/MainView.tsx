@@ -4,8 +4,8 @@ import Close from '@mui/icons-material/Close';
 import Settings from '@mui/icons-material/Settings';
 
 export const MainView = ui.createView<{vm: ui.MainViewModel}>(({vm}) => (
-  <ui.material.Box>
-    {vm.hasError && <ui.material.Box sx={styles.container}>
+  <ui.material.Box sx={styles.container}>
+    {vm.hasError && <ui.material.Box sx={styles.error}>
       <ui.material.Typography>
         {vm.errorMessage}
       </ui.material.Typography>
@@ -29,6 +29,12 @@ export const MainView = ui.createView<{vm: ui.MainViewModel}>(({vm}) => (
 
 const styles = {
   container: {
+    height: '100vh',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    userSelect: 'none'
+  },
+  error: {
     textAlign: 'center',
     width: '100%',
     position: 'fixed',
