@@ -1,17 +1,14 @@
 import * as app from '..';
 
 export class EntityUpdate {
-  private constructor(entities: Array<app.EntityUpdateEntity>) {
-    this.entities = entities;
-  }
+  private constructor(
+    readonly entities: Array<app.EntityUpdateEntity>) {}
 
   static create(stream: app.BinaryReader) {
     const membersSize = stream.readVariableLength();
     const members = process(stream, membersSize);
     return new EntityUpdate(members);
   }
-
-  readonly entities: Array<app.EntityUpdateEntity>;
 }
 
 function process(stream: app.BinaryReader, size: number) {

@@ -18,7 +18,7 @@ export class Recoil {
       const vecAngles = localPlayer.vecPunchWeaponAngle.value;
       const viewAngles = localPlayer.viewAngles.value;
       if (Math.abs(vecAngles.x) >= 0.5 || Math.abs(vecAngles.y) >= 0.5 || Math.abs(vecAngles.z) >= 0.5) {
-        localPlayer.viewAngles.value = viewAngles.add(this.vecAngles).subtract(vecAngles);
+        localPlayer.viewAngles.delta(viewAngles.add(this.vecAngles).subtract(vecAngles));
         this.inSync = true;
         this.vecAngles = vecAngles;
       }

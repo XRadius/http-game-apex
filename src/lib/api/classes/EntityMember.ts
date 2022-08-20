@@ -4,6 +4,7 @@ export class EntityMember {
   readonly buffer: DataView;
   readonly interval: number;
   readonly offset: number;
+  deltas?: Array<app.EntityChangeMemberDelta>;
   send?: boolean;
   syncId?: number;
 
@@ -23,9 +24,11 @@ export class EntityMember {
 
   update(syncId: number) {
     if (!this.send) return;
+    const packet = new app.EntityChangeMember(this.offset, this.buffer, this.deltas);
+    this.deltas = undefined;
     this.send = false;
     this.syncId = syncId;
-    return new app.EntityChangeMember(this.offset, this.buffer);
+    return packet;
   }
 
   private receiveUpdate(packet: app.EntityUpdateEntityMember) {

@@ -1,12 +1,11 @@
 import * as app from '..';
 
 export class EntityCreate implements app.IPacketWriter {
-  constructor(id: number, address: bigint, members: Array<app.EntityCreateMember>, requestBatch: boolean) {
-    this.id = id;
-    this.address = address;
-    this.members = members;
-    this.requestBatch = requestBatch;
-  }
+  constructor(
+    readonly id: number,
+    readonly address: bigint,
+    readonly members: Array<app.EntityCreateMember>,
+    readonly requestBatch: boolean) {}
 
   write(stream: app.BinaryWriter) {
     stream.writeUInt8(app.PacketType.EntityCreate);
@@ -16,9 +15,4 @@ export class EntityCreate implements app.IPacketWriter {
     this.members.forEach(x => x.write(stream));
     stream.writeUInt8(Number(this.requestBatch));
   }
-
-  readonly id: number;
-  readonly address: bigint;
-  readonly members: Array<app.EntityCreateMember>;
-  readonly requestBatch: boolean;
 }

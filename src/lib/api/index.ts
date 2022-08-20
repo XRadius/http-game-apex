@@ -1,4 +1,5 @@
-export const VERSION = 5;
+export const VERSION = 6;
+export * from './abstracts/enums/DeltaType';
 export * from './abstracts/enums/PacketType';
 export * from './abstracts/interfaces/IPacketProvider';
 export * from './abstracts/interfaces/IPacketWriter';
@@ -9,6 +10,7 @@ export * from './packets/BasicAlive';
 export * from './packets/BasicSync';
 export * from './packets/EntityChange';
 export * from './packets/EntityChangeMember';
+export * from './packets/EntityChangeMemberDelta';
 export * from './packets/EntityCreate';
 export * from './packets/EntityCreateMember';
 export * from './packets/EntityDelete';

@@ -1,10 +1,9 @@
 import * as app from '..';
 
 export class EntityChange implements app.IPacketWriter {
-  constructor(id: number, changes: Array<app.EntityChangeMember>) {
-    this.id = id;
-    this.changes = changes;
-  }
+  constructor(
+    readonly id: number,
+    readonly changes: Array<app.EntityChangeMember>) {}
 
   write(stream: app.BinaryWriter) {
     stream.writeUInt8(app.PacketType.EntityChange);
@@ -12,7 +11,4 @@ export class EntityChange implements app.IPacketWriter {
     stream.writeVariableLength(this.changes.length);
     this.changes.forEach(x => x.write(stream));
   }
-
-  readonly id: number;
-  readonly changes: Array<app.EntityChangeMember>;
 }
