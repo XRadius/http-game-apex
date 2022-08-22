@@ -64,7 +64,7 @@ export class Radar {
     const r = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     if (r < this.maximumDistance) {
       const s = this.outerRadius / this.maximumDistance;
-      const a = Math.sign(dy) * Math.acos(dx / r) - localPlayer.viewAngles.value.y * Math.PI / 180;
+      const a = Math.sign(dy) * Math.acos(dx / r) - localPlayer.viewAngle.value.y * Math.PI / 180;
       const x = this.centerX + Math.sin(a) * r * s;
       const y = this.centerY + Math.cos(a) * r * s;
       return {x, y};
