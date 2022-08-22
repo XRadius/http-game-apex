@@ -1,4 +1,4 @@
 export const entityOffsets = {
-  localOrigin: 0x158,
-  iSignifierName: 0x580
+  localOrigin: 0x0054,
+  iSignifierName: 0x0580
 };
