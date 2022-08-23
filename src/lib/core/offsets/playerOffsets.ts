@@ -5,6 +5,6 @@ export const playerOffsets = {
   iName: 0x589,
   lifeState: 0x798,
   vecPunchWeaponAngle: 0x23f8,
-  viewAngles: 0x24e0, /* ammoPoolCapacity - 0x14 */
+  viewAngles: 0x164, /* ammoPoolCapacity - 0x14 */
   bleedoutState: 0x2688
 };
