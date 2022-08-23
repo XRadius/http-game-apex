@@ -1,4 +1,4 @@
-import * as app from '..';
+import * as app from '.';
 
 export class Radar {
   private readonly context: CanvasRenderingContext2D;

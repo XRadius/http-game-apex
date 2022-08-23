@@ -1,4 +1,4 @@
-import * as app from '..';
+import * as app from '.';
 
 export class Recoil {
   private inSync = false;

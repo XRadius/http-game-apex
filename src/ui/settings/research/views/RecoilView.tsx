@@ -7,20 +7,33 @@ export const RecoilView = ui.createView<{vm: app.RecoilViewModel}>(({vm}) => (
     <ui.material.Typography variant="h6">
       {app.language.researchRecoil}
     </ui.material.Typography>
-    <ui.material.Alert severity="info">
-      {app.language.researchRecoilDescription}
-    </ui.material.Alert>
     <ui.material.FormControlLabel
       label={app.language.researchRecoilEnable}
       control={<ui.material.Switch
         onChange={x => vm.enable.change(x.target.checked)}
         checked={vm.enable.value} />} />
-    <ui.material.Typography variant="subtitle1">
-      {app.language.researchRecoilTimer}: {vm.timer.value}ms
-    </ui.material.Typography>
+    <ui.material.Box sx={styles.sliderLabel}>
+      <ui.material.Typography>
+        {app.language.researchRecoilTimer}
+      </ui.material.Typography>
+      <ui.material.Box sx={styles.sliderValue}>
+        {vm.timer.value}
+      </ui.material.Box>
+    </ui.material.Box>
     <ui.material.Slider
       onChange={(_, x) => vm.timer.change(Number(x))}
       value={vm.timer.value}
       min={0} max={250} />
   </ui.material.FormGroup>
 ));
+
+const styles = {
+  sliderLabel: {
+    position: 'relative'
+  },
+  sliderValue: {
+    position: 'absolute',
+    right: 0,
+    top: 0
+  }
+};

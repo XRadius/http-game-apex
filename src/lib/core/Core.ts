@@ -2,8 +2,8 @@ import * as app from '.';
 
 export class Core {
   readonly buttonList = new app.ButtonList(this.address);
-  readonly levelName = new app.LevelName(this.address + app.coreOffsets.levelName);
-  readonly localPlayer = new app.LocalPlayer(this.address + app.coreOffsets.localPlayer);
+  readonly levelName = new app.LevelName(this.address + app.offsets.core.levelName);
+  readonly localPlayer = new app.LocalPlayer(this.address + app.offsets.core.localPlayer);
   readonly itemList = this.itemFilter.map;
   readonly npcList = this.npcFilter.map;
   readonly playerList = this.playerFilter.map;
@@ -11,7 +11,7 @@ export class Core {
   private constructor(
     private readonly address: bigint,
     private readonly channel: app.api.Channel,
-    private readonly entityList = new app.EntityList(address + app.coreOffsets.clEntityList),
+    private readonly entityList = new app.EntityList(address + app.offsets.core.clEntityList),
     private readonly itemFilter = new app.EntityListFilter(app.Item, 'prop_survival'),
     private readonly npcFilter = new app.EntityListFilter(app.NPC, 'npc_dummie'),
     private readonly playerFilter = new app.EntityListFilter(app.Player, 'player'),

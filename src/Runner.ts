@@ -17,7 +17,7 @@ export class Runner {
 
   run(core: app.core.Core, vm: ui.MainViewModel) {
     const localPlayer = core.playerList.get(core.localPlayer.value);
-    this.updateRecoil(core, vm, localPlayer);
+    this.updateResearch(core, vm, localPlayer);
     this.updateSense(core, vm, localPlayer);
     this.canvas.height = window.innerHeight;
     this.canvas.width = window.innerWidth;
@@ -61,7 +61,7 @@ export class Runner {
       this.radar.renderPlayers(localPlayer, core.playerList.values());
   }
   
-  private updateRecoil(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
+  private updateResearch(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
     if (vm.settings.research.recoil.enable.value && localPlayer)
       this.recoil.update(core.buttonList, localPlayer, vm.settings.research.recoil.timer.value);
   }
