@@ -62,8 +62,8 @@ export class Runner {
   }
   
   private updateResearch(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
-    if (vm.settings.research.recoil.enable.value && localPlayer)
-      this.recoil.update(core.buttonList, localPlayer, vm.settings.research.recoil.timer.value);
+    if (vm.settings.research.recoil.enable.value && localPlayer && vm.settings.research.recoil.options)
+      this.recoil.update(core.buttonList, localPlayer, vm.settings.research.recoil.options);
   }
 
   private updateSense(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {

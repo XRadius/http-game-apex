@@ -14,16 +14,16 @@ export const RecoilView = ui.createView<{vm: app.RecoilViewModel}>(({vm}) => (
         checked={vm.enable.value} />} />
     <ui.material.Box sx={styles.sliderLabel}>
       <ui.material.Typography>
-        {app.language.researchRecoilTimer}
+        {app.language.researchRecoilPercentage}
       </ui.material.Typography>
       <ui.material.Box sx={styles.sliderValue}>
-        {vm.timer.value}
+        {vm.percentage.value}
       </ui.material.Box>
     </ui.material.Box>
     <ui.material.Slider
-      onChange={(_, x) => vm.timer.change(Number(x))}
-      value={vm.timer.value}
-      min={0} max={250} />
+      onChange={(_, x) => vm.percentage.change(Number(x))}
+      value={vm.percentage.value}
+      min={0} max={1} step={0.01} />
   </ui.material.FormGroup>
 ));
 
