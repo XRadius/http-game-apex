@@ -34,7 +34,7 @@ export class EntityMember {
   private receiveUpdate(packet: app.EntityUpdateEntityMember) {
     if (typeof this.syncId !== 'undefined') return;
     if (packet.buffer.byteLength !== this.buffer.byteLength) return;
-    for (let i = 0; i < packet.buffer.byteLength; i++) this.buffer.setInt8(i, packet.buffer.getInt8(i));
+    for (let i = 0; i < packet.buffer.byteLength; i++) this.buffer.setUint8(i, packet.buffer.getUint8(i));
   }
 
   private receiveSync(packet: app.BasicSync) {
