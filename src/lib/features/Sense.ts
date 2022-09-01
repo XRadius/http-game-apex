@@ -20,7 +20,7 @@ export class Sense {
         if (this.inRange(localPlayer, player.localOrigin)) {
           /* This could be a Bloodhound scan! */
         } else if (player.glowEnable.value === 7) {
-          player.glowEnable.value = 1;
+          player.glowEnable.value = 2;
           player.glowThroughWalls.value = 5;
         }
       }
@@ -44,7 +44,7 @@ export class Sense {
           player.glowEnable.value = 7;
           player.glowThroughWalls.value = 2;
         } else if (player.glowEnable.value === 7) {
-          player.glowEnable.value = 1;
+          player.glowEnable.value = 2;
           player.glowThroughWalls.value = 5;
         }
       }
