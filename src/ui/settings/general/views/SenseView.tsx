@@ -17,5 +17,10 @@ export const SenseView = ui.createView<{vm: app.SenseViewModel}>(({vm}) => (
       control={<ui.material.Switch
         onChange={x => vm.highlightPlayers.change(x.target.checked)}
         checked={vm.highlightPlayers.value} />} />
+    <ui.material.FormControlLabel
+      label={app.language.generalSenseLongRangeMode}
+      control={<ui.material.Switch
+        onChange={x => vm.longRangeMode.change(x.target.checked)}
+        checked={vm.longRangeMode.value} />} />
   </ui.material.FormGroup>
 ));

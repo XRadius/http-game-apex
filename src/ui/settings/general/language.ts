@@ -9,6 +9,7 @@ export const language = {
   generalSense: 'Sense',
   generalSenseItems: 'Highlight Items',
   generalSensePlayers: 'Highlight Players',
+  generalSenseLongRangeMode: 'Long Range Mode',
   generalViewType: 'Main',
   generalViewTypeMap: 'Show Map',
   generalViewTypeRadar: 'Show Radar'

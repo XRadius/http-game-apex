@@ -25,6 +25,7 @@ export const offsets = {
     lifeState: 0x798,                 // [RecvTable.DT_Player]            -> m_lifeState
     vecPunchWeaponAngle: 0x23f8,      // [DataMap.C_Player]               -> m_currentFrameLocalPlayer.m_vecPunchWeapon_Angle
     viewAngle: 0x24e0,                // [DataMap.C_Player]               -> m_ammoPoolCapacity - 0x14
-    bleedoutState: 0x2688             // [RecvTable.DT_Player]            -> m_bleedoutState
+    bleedoutState: 0x2688,            // [RecvTable.DT_Player]            -> m_bleedoutState
+    zooming: 0x1bc1                   // [RecvTable.DT_Player]            -> m_bZooming
   }
 };

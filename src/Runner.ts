@@ -75,7 +75,7 @@ export class Runner {
       : this.sense.resetPlayers.bind(this.sense);
     if (localPlayer) {
       itemsFn(localPlayer, core.itemList.values(), vm.settings.itemSet);
-      playersFn(localPlayer, core.playerList.values());
+      playersFn(localPlayer, core.playerList.values(), vm.settings.general.sense.longRangeMode.value);
     }
   }
 }
