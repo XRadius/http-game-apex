@@ -37,12 +37,12 @@ export class Sense {
     }
   }
 
-  updatePlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>, longRangeMode: boolean) {
+  updatePlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>, options?: ISenseOptions) {
     for (const player of players) {
       if (player.isValid && !player.isSameTeam(localPlayer)) {
         const range = this.range(localPlayer, player.localOrigin);
         if (range < this.maximumDistance) {
-          if (longRangeMode && range > 50 && localPlayer.zooming.value == 1) {
+          if (options && options.longRangeMode && range > 50 && localPlayer.zooming.value == 1) {
             player.glowEnable.value = 5;
             player.glowThroughWalls.value = 1;
           } else {
@@ -68,4 +68,8 @@ export class Sense {
     const dy = (localPlayer.localOrigin.value.y - origin.value.y) * 0.0254;
     return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
   }
+}
+
+export type ISenseOptions = {
+  longRangeMode: boolean;
 }
