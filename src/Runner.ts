@@ -17,7 +17,7 @@ export class Runner {
 
   run(core: app.core.Core, vm: ui.MainViewModel) {
     const localPlayer = core.playerList.get(core.localPlayer.value);
-    this.updateResearch(core, vm, localPlayer);
+    this.updateResearch(vm, localPlayer);
     this.updateSense(core, vm, localPlayer);
     this.canvas.height = window.innerHeight;
     this.canvas.width = window.innerWidth;
@@ -61,9 +61,9 @@ export class Runner {
       this.radar.renderPlayers(localPlayer, core.playerList.values());
   }
   
-  private updateResearch(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
+  private updateResearch(vm: ui.MainViewModel, localPlayer?: app.core.Player) {
     if (vm.settings.research.recoil.enable.value && localPlayer && vm.settings.research.recoil.options)
-      this.recoil.update(core.buttonList, localPlayer, vm.settings.research.recoil.options);
+      this.recoil.update(localPlayer, vm.settings.research.recoil.options);
   }
 
   private updateSense(core: app.core.Core, vm: ui.MainViewModel, localPlayer?: app.core.Player) {
@@ -75,7 +75,7 @@ export class Runner {
       : this.sense.resetPlayers.bind(this.sense);
     if (localPlayer) {
       itemsFn(localPlayer, core.itemList.values(), vm.settings.itemSet);
-      playersFn(localPlayer, core.playerList.values());
+      playersFn(localPlayer, core.playerList.values(), vm.settings.general.sense.options);
     }
   }
 }
