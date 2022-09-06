@@ -19,7 +19,7 @@ export class Sense {
       if (player.isValid && !player.isSameTeam(localPlayer)) {
         if (this.inRange(localPlayer, player.localOrigin)) {
           /* This could be a Bloodhound scan! */
-        } else if (player.glowEnable.value === 7) {
+        } else if (player.glowEnable.value === 7 || player.glowEnable.value === 5) {
           player.glowEnable.value = 2;
           player.glowThroughWalls.value = 5;
         }
@@ -40,17 +40,16 @@ export class Sense {
   updatePlayers(localPlayer: app.core.Player, players: Iterable<app.core.Player>, longRangeMode: boolean) {
     for (const player of players) {
       if (player.isValid && !player.isSameTeam(localPlayer)) {
-        if (this.inRange(localPlayer, player.localOrigin)) {
-          if (longRangeMode 
-            && this.range(localPlayer, player.localOrigin) > 50 
-            && localPlayer.zooming.value == 1) {
+        const range = this.range(localPlayer, player.localOrigin);
+        if (range < this.maximumDistance) {
+          if (longRangeMode && range > 50 && localPlayer.zooming.value == 1) {
             player.glowEnable.value = 5;
             player.glowThroughWalls.value = 1;
           } else {
             player.glowEnable.value = 7;
             player.glowThroughWalls.value = 2;
           }
-        } else if (player.glowEnable.value === 7) {
+        } else if (player.glowEnable.value === 7 || player.glowEnable.value === 5) {
           player.glowEnable.value = 2;
           player.glowThroughWalls.value = 5;
         }
@@ -69,5 +68,4 @@ export class Sense {
     const dy = (localPlayer.localOrigin.value.y - origin.value.y) * 0.0254;
     return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
   }
-
 }
