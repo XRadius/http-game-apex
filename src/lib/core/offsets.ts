@@ -24,7 +24,7 @@ export const offsets = {
     iName: 0x589,                     // [RecvTable.DT_BaseEntity]        -> m_iName
     lifeState: 0x798,                 // [RecvTable.DT_Player]            -> m_lifeState
     vecPunchWeaponAngle: 0x2440,      // [DataMap.C_Player]               -> m_currentFrameLocalPlayer.m_vecPunchWeapon_Angle
-    viewAngle: 0x253c,                // [DataMap.C_Player]               -> m_ammoPoolCapacity - 0x14
+    viewAngle: 0x2528,                // [DataMap.C_Player]               -> m_ammoPoolCapacity - 0x14
     bleedoutState: 0x26d0             // [RecvTable.DT_Player]            -> m_bleedoutState
   }
 };
