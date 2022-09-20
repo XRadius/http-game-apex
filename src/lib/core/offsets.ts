@@ -11,7 +11,7 @@ export const offsets = {
   entity: {
     localOrigin: 0x158,               // [DataMap.CBaseViewModel]         -> m_localOrigin
     iSignifierName: 0x580,            // [RecvTable.DT_BaseEntity]        -> m_iSignifierName
-    lastVisibleTime: 0x1a44           // [Miscellaneous]                  -> CPlayer!lastVisibleTime
+    lastVisibleTime: 0x1a48           // [Miscellaneous]                  -> CPlayer!lastVisibleTime
   },
   item: {
     highlightFunctionBits: 0x2c0,     // [RecvTable.DT_HighlightSettings] -> m_highlightFunctionBits
