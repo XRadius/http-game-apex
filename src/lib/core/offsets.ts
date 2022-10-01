@@ -4,7 +4,7 @@ export const offsets = {
     inAttack: 0x75c62e0               // [Buttons]                        -> in_attack
   },
   core: {
-    levelName: BigInt(0x13c3e38),     // [Miscellaneous]                  -> LevelName
+    levelName: BigInt(0x13a17b8),     // [Miscellaneous]                  -> LevelName
     clEntityList: BigInt(0x1a98758),  // [Miscellaneous]                  -> cl_entitylist
     localPlayer: BigInt(0x1e49268)    // [Miscellaneous]                  -> LocalPlayer
   },
@@ -24,7 +24,7 @@ export const offsets = {
     iName: 0x589,                     // [RecvTable.DT_BaseEntity]        -> m_iName
     lifeState: 0x798,                 // [RecvTable.DT_Player]            -> m_lifeState
     vecPunchWeaponAngle: 0x2440,      // [DataMap.C_Player]               -> m_currentFrameLocalPlayer.m_vecPunchWeapon_Angle
-    viewAngle: 0x253c,                // [DataMap.C_Player]               -> m_ammoPoolCapacity - 0x14
+    viewAngle: 0x253c - 0x14,         // [DataMap.C_Player]               -> m_ammoPoolCapacity - 0x14
     bleedoutState: 0x26d0             // [RecvTable.DT_Player]            -> m_bleedoutState
   }
 };
